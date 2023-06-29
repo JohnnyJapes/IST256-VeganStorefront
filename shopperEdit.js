@@ -171,9 +171,9 @@ $(document).ready(function () {
     function validatePhone() {
         const re = /^[0-9]{3}[-][0-9]{3}[-][0-9]{4}$/gm
         if (!phoneInput.val()) {
-            phoneInput.addClass("is-invalid");
-            $("#phonenum + .invalid-feedback").text("Please enter a valid Phone Number.")
-            return 1;
+            phoneInput.removeClass("is-invalid");
+            phoneInput.addClass("is-valid");
+            return 0;
         }
         if (!re.test(phoneInput.val())) {
             phoneInput.addClass("is-invalid");

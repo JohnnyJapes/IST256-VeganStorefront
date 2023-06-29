@@ -1,39 +1,32 @@
-	html {
-		position: relative;
-		min-height: 100%;
-	}
-	footer{
-		background-color: #D1D1D1;
-	}
-	h1{
-		color: black;
-		font-size: 3em;
-		text-align: left;
-	}
-	body {
-		margin-left: 5px;
-		font-family: Arial, Helvetica, sans-serif;
-	}
-
-	.topnav {
-		overflow: hidden;
-	}
-
-	.topnav a {
-		float: left;
-		background-color: #D1D1D1;
-		color: black;
-		text-align: center;
-		padding: 14px 16px;
-		text-decoration: none;
-		font-size: 17px;
-	}
-
-	.topnav a:hover {
-		background-color: #A0A0A0;
-	}
-
-	.topnav a.active {
-		background-color: grey;
-		color: black;
-	}
+html {
+	position: relative;
+	min-height: 100%;
+  }
+  
+  footer {
+	background-color: #D1D1D1;
+  }
+  
+  h1{
+		  color: black;
+		  font-size: 3em;
+		  text-align: left;
+	  }
+	  body {
+		  font-family: Arial, Helvetica, sans-serif;
+	  }
+  
+	  nav {
+		  overflow: hidden;
+	  }
+  
+	  .nav-item a:hover {
+		  background-color: #A0A0A0;
+	  }
+  
+	  .nav-item.active {
+		  background-color: darkgrey;
+		  color: black;
+	  }
+  
+  
