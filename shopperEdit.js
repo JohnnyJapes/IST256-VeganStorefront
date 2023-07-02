@@ -48,11 +48,6 @@ $(document).ready(function () {
         validatePhone();
     })
 
-
-
-
-
-
     function submit(event) {
         //validation logic here
         event.preventDefault();
@@ -81,6 +76,7 @@ $(document).ready(function () {
     //fucntion for email validation
     //checks for @ sign and that the input isn't empty
     function validateEmail() {
+        //regex to validate @ sign
         const re = new RegExp("[a-zA-Z0-9]+@[a-zA-Z0-9]+", "gm")
         if (!emailInput.val()) {
             emailInput.addClass("is-invalid");
@@ -97,6 +93,7 @@ $(document).ready(function () {
         return 0;
     }
     function validateFirstName() {
+        //regex to check that it is a single word
         const re = /^[a-zA-z]+$/gm
         if (!fNameInput.val()) {
             fNameInput.addClass("is-invalid");
@@ -113,6 +110,7 @@ $(document).ready(function () {
         return 0;
     }
     function validateLastName() {
+        //regex to check that it is a single word
         const re = /^[a-zA-z]+$/gm
         if (!lNameInput.val()) {
             lNameInput.addClass("is-invalid");
@@ -129,18 +127,21 @@ $(document).ready(function () {
         return 0;
     }
     function validateAge() {
+        //check for input and that the input is an integer
         if (!parseInt(ageInput.val())) {
             ageInput.addClass("is-invalid");
             $("#age + .invalid-feedback").text("Please enter a valid age.")
             return 1;
         }
+        //check over 17
         if (parseInt(ageInput.val()) < 18) {
             ageInput.addClass("is-invalid");
             console.log("age error")
             $("#age + .invalid-feedback").text("Invalid age. Please enter a number above 17.")
             return 1;
         }
-        if (parseInt(ageInput.val()) > 100) {
+        //check under 110
+        if (parseInt(ageInput.val()) > 110) {
             ageInput.addClass("is-invalid");
             console.log("age")
             $("#age + .invalid-feedback").text("Invalid age. Please enter a number under 110.")
