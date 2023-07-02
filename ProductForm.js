@@ -1,6 +1,8 @@
 $(document).ready(function () {
     let alertPlaceholder = $("#alertPlaceholder");
     let editSwitch = $("#AESwitcher");
+    let productId = document.getElementById("productId");
+    let description = document.getElementById("description");
 
     //initiate switch logic
     if (editSwitch.prop("checked") == true) {
@@ -24,6 +26,31 @@ $(document).ready(function () {
         }
     })
 
+
+    //Other listeners
+    productId.addEventListener("focusout", (event) => {
+        productIdCheck();
+    })
+    productId.addEventListener("input", (event) => {
+        productIdCheck();
+    })
+    description.addEventListener("focusout", (event) => {
+        descriptionCheck();
+    })
+    description.addEventListener("input", (event) => {
+        descriptionCheck();
+    })
+    $('#category').on("change", (event) => validateCategory());
+    $('#price').on("focusout", (event) => validatePrice());
+    $('#price').on("input", (event) => validatePrice());
+    $('#weight').on("focusout", (event) => validateWeight());
+    $('#weight').on("input", (event) => validateWeight());
+    $('#unit').on("change", (event) => validateUnit());
+
+
+
+
+
     $('#productForm').submit(function (event) {
         // Prevent default form submission
         console.log('submit event')
@@ -37,10 +64,10 @@ $(document).ready(function () {
         var product = {
             productID: $('#productId').val(),
             description: $('#description').val(),
-            weight: $('#weight').val(),
-            price: $('#price').val(),
             category: $('#category').val(),
-            unit: $('#unit').val()
+            price: $('#price').val(),
+            weight: $('#weight').val(),
+            unitOfMeasure: $('#unit').val()
         };
 
         if (editSwitch.prop("checked") == true) {
@@ -74,69 +101,92 @@ $(document).ready(function () {
         var isValid = true;
 
         //validate product ID
-        if (!productIdCheck()) isvalid = false;
+        if (!productIdCheck()) isValid = false;
 
         //validate Description
-        if (!descriptionCheck()) isvalid = false;
-
-        // Validate weight
-        var weight = $('#weight').val();
-        if (isNaN(weight) || weight <= 0) {
-            isValid = false;
-            alert("Weight should be a positive number");
-        }
-
-        // Validate price
-        var price = $('#price').val();
-        if (isNaN(price) || price <= 0) {
-            isValid = false;
-            alert("Price should be a positive number");
-        }
+        if (!descriptionCheck()) isValid = false;
 
         // Validate category
-        var category = $('#category').val();
-        if (!category) {
+        if (!validateCategory()) {
             isValid = false;
-            alert("Please select a category");
         }
+        // Validate weight
+        if (!validateWeight()) isValid = false;
+        // Validate price
+        if (!validatePrice()) isValid = false;
 
         // Validate unit
-        var unit = $('#unit').val();
-        if (!unit) {
-            isValid = false;
-            alert("Please select a unit of measurement");
-        }
+        if (!validateUnit()) isValid = false;
 
         return isValid;
     }
 
-    // //example usage
-    // let test = document.getElementById("productid");
 
+    function validateCategory() {
+        let category = $('#category');
+        const set = new Set([1, 2, 3])
+        if (!set.has(parseInt(category.val()))) {
+            console.log(category.val())
+            category.addClass("is-invalid");
+            category.next().text("Please Select a Category");
+            return false;
+        }
+        else {
+            category.removeClass("is-invalid");
+            category.addClass("is-valid");
+            return true;
+        }
+    }
 
+    function validatePrice() {
+        var price = $('#price');
+        if (isNaN(price.val()) || price.val() <= 0) {
+            price.addClass("is-invalid");
+            price.next().text("Price should be a positive number");
+            return false;
+        }
+        else {
+            price.removeClass("is-invalid");
+            price.addClass("is-valid");
+            return true;
+        }
+    }
+    function validateWeight() {
+        // Validate weight
+        var weight = $('#weight').val();
+        if (!weight) {
+            $('#weight').removeClass("is-invalid");
+            $('#weight').addClass("is-valid");
+            return true
+        }
+        if (isNaN(weight) || weight <= 0) {
+            $('#weight').addClass("is-invalid");
+            $('#weight').next().text("Weight should be a positive number");
+            return false;
+        }
+        else {
+            $('#weight').removeClass("is-invalid");
+            $('#weight').addClass("is-valid");
+            return true;
+        }
+    }
 
-    // test.addEventListener("focusout", (event) => {
-    //     testCheck();
-    // })
+    function validateUnit() {
+        let unit = $('#unit');
+        const set = new Set([1, 2, 3, 4, 5])
+        if (!set.has(parseInt(unit.val()))) {
+            console.log(unit.val())
+            unit.addClass("is-invalid");
+            unit.next().text("Please Select a Unit of measurement");
+            return false;
+        }
+        else {
+            unit.removeClass("is-invalid");
+            unit.addClass("is-valid");
+            return true;
+        }
+    }
 
-
-    // function testCheck() {
-    //     if (!test.value) {
-    //         addInvalid(test, "No input");
-    //     }
-    //     else {
-    //         makeValid(test)
-    //     }
-    //     return
-    // }
-
-
-
-    let productId = document.getElementById("productId");
-
-    productId.addEventListener("focusout", (event) => {
-        productIdCheck();
-    })
 
     function productIdCheck() {
         if (!productId.value) {
@@ -149,11 +199,6 @@ $(document).ready(function () {
 
     }
 
-    let description = document.getElementById("description");
-
-    description.addEventListener("focusout", (event) => {
-        descriptionCheck();
-    })
 
     function descriptionCheck() {
         if (!description.value) {
@@ -164,19 +209,6 @@ $(document).ready(function () {
             return true;
         }
     }
-
-
-
-
-
-
-    // form.on("submit", submit);
-    // emailInput.on("focusout", (event) => {
-    //     validateEmail();
-    // })
-    // emailInput.on("input", (event) => {
-    //     validateEmail();
-    // })
 
 
 
