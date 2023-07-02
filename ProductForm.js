@@ -1,6 +1,28 @@
 $(document).ready(function () {
     let alertPlaceholder = $("#alertPlaceholder");
-    let editSwitch = document.getElementById("AESwitcher");
+    let editSwitch = $("#AESwitcher");
+
+    //initiate switch logic
+    if (editSwitch.prop("checked") == true) {
+        $("#add").prop("disabled", true);
+        $("#update").prop("disabled", false)
+    }
+    else {
+        $("#add").prop("disabled", false);
+        $("#update").prop("disabled", true)
+    }
+    //listen for further changes
+    editSwitch.on("change", (event) => {
+        console.log("switch")
+        if (editSwitch.prop("checked") == true) {
+            $("#add").prop("disabled", true);
+            $("#update").prop("disabled", false)
+        }
+        else {
+            $("#add").prop("disabled", false);
+            $("#update").prop("disabled", true)
+        }
+    })
 
     $('#productForm').submit(function (event) {
         // Prevent default form submission
@@ -13,16 +35,17 @@ $(document).ready(function () {
         }
 
         var product = {
-            productID: $('#proId').val(),
-            description: $('#description').val,
+            productID: $('#productId').val(),
+            description: $('#description').val(),
             weight: $('#weight').val(),
             price: $('#price').val(),
             category: $('#category').val(),
             unit: $('#unit').val()
         };
 
-        if (editSwitch.checked == true) {
-            if (matchID(product) >= 0) {
+        if (editSwitch.prop("checked") == true) {
+            let index = matchID(product);
+            if (index >= 0) {
                 updateProduct(product, index);
             }
             else {
@@ -31,7 +54,7 @@ $(document).ready(function () {
             }
         }
         // Create JSON from the product object
-        if (matchID(product) < 0) {
+        else if (matchID(product) < 0) {
             createProduct(product);
         }
         else {
@@ -51,7 +74,7 @@ $(document).ready(function () {
         var isValid = true;
 
         //validate product ID
-        if (!proIdCheck()) isvalid = false;
+        if (!productIdCheck()) isvalid = false;
 
         //validate Description
         if (!descriptionCheck()) isvalid = false;
@@ -109,13 +132,13 @@ $(document).ready(function () {
 
 
 
-    let productId = document.getElementById("proId");
+    let productId = document.getElementById("productId");
 
     productId.addEventListener("focusout", (event) => {
-        proIdCheck();
+        productIdCheck();
     })
 
-    function proIdCheck() {
+    function productIdCheck() {
         if (!productId.value) {
             addInvalid(productId, "Please enter a valid id");
             return false;
