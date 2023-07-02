@@ -84,13 +84,17 @@ $(document).ready(function () {
             case 5: unit = "Liters";
                 break;
         }
+        let weight;
+        console.log($('#weight').val())
+        if (!$('#weight').val()) weight = 0;
+        else weight = $('#weight').val();
 
         var product = {
             productID: $('#productId').val(),
             description: $('#description').val(),
             category: category,
             price: $('#price').val(),
-            weight: $('#weight').val(),
+            weight: weight,
             unitOfMeasure: unit
         };
 
