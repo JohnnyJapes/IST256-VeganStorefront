@@ -61,13 +61,37 @@ $(document).ready(function () {
             return;
         }
 
+        //map select inputs
+        let category;
+        let unit;
+        switch (parseInt($("#category").val())) {
+            case 1: category = "Vegetables";
+                break;
+            case 2: category = "Meat Alternative";
+                break;
+            case 3: category = "Merchandise";
+                break;
+        }
+        switch (parseInt($("#unit").val())) {
+            case 1: unit = "Grams";
+                break;
+            case 2: unit = "Kilograms";
+                break;
+            case 3: unit = "Ounces";
+                break;
+            case 4: unit = "Pounds";
+                break;
+            case 5: unit = "Liters";
+                break;
+        }
+
         var product = {
             productID: $('#productId').val(),
             description: $('#description').val(),
-            category: $('#category').val(),
+            category: category,
             price: $('#price').val(),
             weight: $('#weight').val(),
-            unitOfMeasure: $('#unit').val()
+            unitOfMeasure: unit
         };
 
         if (editSwitch.prop("checked") == true) {
@@ -90,10 +114,15 @@ $(document).ready(function () {
         }
         var productJson = JSON.stringify(product);
 
-        if (product)
-
+        if (product) {
             // Display the JSON on successful validation
-            appendAlert("Form submitted successfully. Product JSON: " + productJson, "success");
+            if (editSwitch.prop("checked") == true) {
+                appendAlert("Product Updated Successfully. Product JSON: " + productJson, "success");
+            }
+            else
+                appendAlert("Product Added successfully. Product JSON: " + productJson, "success");
+        }
+
     });
 
     // Form validation function
@@ -208,86 +237,6 @@ $(document).ready(function () {
             makeValid(description)
             return true;
         }
-    }
-
-
-
-
-
-    function submit2(event) {
-        //validation logic here
-        event.preventDefault();
-        event.stopPropagation();
-        let err = 0;
-        err += validateEmail();
-        err += validateFirstName();
-        err += validateLastName();
-        err += validateAge();
-        err += validateAddress();
-        err += validatePhone();
-        if (err > 0) return;
-
-        jsonUser = data();
-        let json2 = {
-            "email": "test2",
-            "name": "test name",
-            "age": "23",
-            "address": addressInput.val(),
-            "phone": phoneInput.val()
-        }
-        //let jsonArr = [jsonUser]
-        let jsonArr = []
-
-        try { jsonArr = JSON.parse(alertPlaceholder.data("productStorage")) }
-        catch {
-            console.log("empty product")
-        }
-
-        if (!jsonArr) {
-            //return valid
-            return true
-            // jsonArr = [];
-            // jsonArr.push(json2)
-            // jsonArr.push(jsonUser)
-        }
-        else {
-            console.log(jsonArr)
-            let match = false;
-            for (let i = 0; i < jsonArr.length; i++) {
-                console.log("loop " + jsonArr[i].email)
-                if (jsonArr[i].email == jsonUser.email) match = true
-            }
-            console.log("match : " + match)
-            if (match) {
-                //add invalid message
-                return
-            }
-            return
-
-        }
-
-        localStorage.setItem("productStorage", JSON.stringify(jsonArr));
-
-
-
-        // $.post("test.json", JSON.stringify(jsonArr), () => {
-        //     appendAlert(JSON.stringify(jsonArr), "Success")
-        // });
-        alertPlaceholder.data("productStorage", JSON.stringify(jsonArr))
-        let json = "";
-        for (key in jsonUser) {
-            json += `${key} : ${jsonUser[key]} <br>`
-        }
-
-
-        console.log(json)
-        //appendAlert("Success! <br> Json Shopper Object: <br>" + json, "success")
-
-        jsonArr = JSON.parse(localStorage.getItem("productStorage"));
-        appendAlert(JSON.stringify(jsonArr), "success")
-
-
-
     }
 
 
