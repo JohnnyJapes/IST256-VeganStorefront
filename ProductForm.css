@@ -6,3 +6,10 @@ html {
   footer {
 	background-color: #D1D1D1;
   }
+  nav {
+		overflow: hidden;
+	  }
+  
+.nav-item a:hover {
+		background-color: #A0A0A0;
+	  }
