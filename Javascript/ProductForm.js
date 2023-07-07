@@ -3,6 +3,7 @@ $(document).ready(function () {
     let editSwitch = $("#AESwitcher");
     let productId = document.getElementById("productId");
     let description = document.getElementById("description");
+    let name = $("#productName");
 
     //initiate switch logic
     if (editSwitch.prop("checked") == true) {
@@ -46,6 +47,8 @@ $(document).ready(function () {
     $('#weight').on("focusout", (event) => validateWeight());
     $('#weight').on("input", (event) => validateWeight());
     $('#unit').on("change", (event) => validateUnit());
+    name.on("input", (event) => validateName());
+    name.on("focusout", (event) => validateName());
 
 
 
@@ -91,6 +94,7 @@ $(document).ready(function () {
 
         var product = {
             productID: $('#productId').val(),
+            productName: name.val(),
             description: $('#description').val(),
             category: category,
             price: $('#price').val(),
@@ -150,6 +154,9 @@ $(document).ready(function () {
 
         // Validate unit
         if (!validateUnit()) isValid = false;
+
+        //validate name
+        if (!validateName()) isValid = false;
 
         return isValid;
     }
@@ -243,6 +250,18 @@ $(document).ready(function () {
         }
     }
 
+    function validateName() {
+        if (!name.val()) {
+            addInvalid(name, "Please enter a Product Name.")
+            return false;
+        }
+        else {
+            makeValid(name);
+            return true;
+        }
+
+    }
+
 
     function appendAlert(message, type) {
         alertPlaceholder.html(`<div class="alert alert-${type} alert-dismissible" role="alert">` +
@@ -256,7 +275,7 @@ $(document).ready(function () {
     //if the id is new, function returns -1
     function matchID(newProduct) {
         alertPlaceholder.data("productStorage", localStorage.getItem("productStorage"))
-        console.log(alertPlaceholder.data("productStorage"))
+        //console.log(alertPlaceholder.data("productStorage"))
         let jsonArr = []
 
 
@@ -297,7 +316,7 @@ $(document).ready(function () {
     //should only be run after matchID() is used to verfiy the productID isn't already in use
     function createProduct(newProduct) {
         alertPlaceholder.data("productStorage", localStorage.getItem("productStorage"))
-        console.log(alertPlaceholder.data("productStorage"))
+        //console.log(alertPlaceholder.data("productStorage"))
 
 
         let jsonArr = []
@@ -379,19 +398,37 @@ $(document).ready(function () {
 
     //pass element and error message
     function addInvalid(element, error) {
-        if (element.classList.contains("is-valid")) {
-            element.classList.remove("is-valid")
+        try {
+            if (element.classList.contains("is-valid")) {
+                element.classList.remove("is-valid")
+            }
+            element.classList.add("is-invalid");
+            element.nextElementSibling.textContent = error;
+
+        } catch (e) {
+            if (element.hasClass("is-valid")) element.removeClass("is-valid");
+            element.addClass("is-invalid");
+            element.next().text(error);
         }
-        element.classList.add("is-invalid");
-        element.nextElementSibling.textContent = error;
 
     }
     //pass element
     function makeValid(element) {
-        element.classList.remove("is-invalid");
-        element.classList.add("is-valid");
+        try {
+            element.classList.remove("is-invalid");
+            element.classList.add("is-valid");
+
+        } catch (error) {
+            element.removeClass("is-invalid");
+            element.addClass("is-valid");
+
+
+        }
+
 
     }
+
+
 
 
 
