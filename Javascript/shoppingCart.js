@@ -44,7 +44,7 @@ class Cart {
                             <div class="input-group mb-3" id="quantity">
                                 <input type="number" class="form-control" value="${item.quantity}" onchange="cart.updateItemQuantity(${i}, this.value)">
                             </div>
-                            <a href="#" class="btn btn-primary" onclick="cart.removeItem(${i})">Remove</a>
+                            <a href="#" class="btn btn-danger" onclick="cart.removeItem(${i})">Remove</a>
                         </div>
                     </div>
                 </div>
