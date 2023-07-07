@@ -29,7 +29,7 @@ $(document).ready(function () {
         container.html("<h1> No products are available at this time. Add products in Product Management</h1>")
     }
     else {
-        container.html("<h1> PRODUCTS</h1>")
+        container.html("<h1> Products</h1>")
         for (let i = 0; i < productArray.length; i++) {
             container.append(`
             <div class="col-md-4 justify-content-center" id="${productArray[i].productID}">
