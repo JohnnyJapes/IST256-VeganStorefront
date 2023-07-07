@@ -35,7 +35,7 @@ $(document).ready(function () {
             <div class="col-md-4 justify-content-center" id="${productArray[i].productID}">
                 <div class="card" style="width: 18rem;">
                 <div class="card-body">
-                    <h5 class="card-title mb-2 text-truncate">${productArray[i].productName}</h5>
+                    <h5 class="card-title pb-1 text-truncate">${productArray[i].productName}</h5>
                     <h6 class="card-subtitle mb-2 text-body-secondary">ID: ${productArray[i].productID}</h6>
                     <p class="card-text text-truncate">${productArray[i].description}</p>
                     <p class="card-text">\$${productArray[i].price}</p>
