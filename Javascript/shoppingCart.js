@@ -32,13 +32,14 @@ class Cart {
         console.log("Update cart")
         for (let i = 0; i < this.items.length; i++) {
             let item = this.items[i];
+            console.log(item)
             $('#cart').append(`
                 <div class="cartItem" >
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">${item.product}</h5>
-                            <p class="card-text">Price: ${item.price}</p>
-                            <p class="card-text">Description: ${item.description}</p>
+                            <h5 class="card-title">${item.product.productName}</h5>
+                            <p class="card-text">Price: ${item.product.price}</p>
+                            <p class="card-text">Description: ${item.product.description}</p>
                             <label for="quantity" class="form-label">Quantity:</label>
                             <div class="input-group mb-3" id="quantity">
                                 <input type="number" class="form-control" value="${item.quantity}" onchange="cart.updateItemQuantity(${i}, this.value)">
@@ -56,9 +57,10 @@ class Cart {
 
 // Initialize Cart
 let cart = new Cart();
-
+loadCart();
 // On document ready
 $(document).ready(function () {
+    cart.updateCart();
     $('#checkOut').click(function () {
         // Handle Checkout
         // This part can be customized according to your needs
@@ -69,12 +71,33 @@ $(document).ready(function () {
         // Add Item
         // Add your logic here to get the item to be added
         let item = {
-            product: 'New Product',
-            price: 20.00,
+            product: {
+                productName: 'New Product',
+                price: 20.00,
+                description: 'New Product Description'
+            },
             quantity: 1,
-            description: 'New Product Description'
+
         };
 
         cart.addItem(item);
     });
 });
+//load cart from local storage
+function loadCart() {
+    let cartArr = []
+    try { cartArr = $.parseJSON(localStorage.getItem("cart")) }
+    catch {
+        console.log("empty cart")
+        cartArr = []
+    }
+    if (!cartArr) {
+        cartArr = []
+    }
+    else {
+        for (let i = 0; i < cartArr.length; i++) {
+            cart.addItem(cartArr[i])
+        }
+    }
+}
+
