@@ -379,7 +379,7 @@ $(document).ready(function () {
         catch {
             console.log("empty product")
         }
-        if (jsonArr[index] == product.prodcutID) {
+        if (jsonArr[index].productID == product.productID) {
             jsonArr[index] = product;
         }
 
