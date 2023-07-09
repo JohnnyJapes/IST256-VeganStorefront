@@ -80,6 +80,8 @@ class Cart {
                 </div>
             `);
         }
+        var jsd = JSON.stringify(this.items);
+        localStorage.setItem("cart", jsd)
         let sum = this.getTotal();
         console.log(sum)
         $('#total').val(sum.toFixed(2));
