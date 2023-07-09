@@ -199,17 +199,19 @@ $(document).ready(function () {
 
     }
     function loadProductStorage() {
-        try { productArray = $.parseJSON(localStorage.getItem("productStorage")) }
+        try {
+            productArray = $.parseJSON(localStorage.getItem("productStorage"))
+            for (let i = 0; i < productArray.length; i++) {
+                products.push(productArray[i])
+                $("#productSelect").append(`
+            <option value=${productArray[i].productID}>${productArray[i].productName}</option>`)
+            }
+        }
         catch {
             console.log("empty product")
             productArray = []
-            return
         }
-        for (let i = 0; i < productArray.length; i++) {
-            products.push(productArray[i])
-            $("#productSelect").append(`
-            <option value=${productArray[i].productID}>${productArray[i].productName}</option>`)
-        }
+
         let item = {
 
             productName: 'Test Product',
