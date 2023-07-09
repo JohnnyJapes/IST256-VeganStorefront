@@ -118,8 +118,8 @@ $(document).ready(function () {
     function getCartInfo() {
 
         $.get("Placeholder API", function (data, status) {
-            let cartArr = []
-            alert("Data: " + data + "\nStatus: " + status);
+
+            alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
         });
 
     }
@@ -133,7 +133,7 @@ $(document).ready(function () {
     }
 
     function updateCart() {
-        $.post("restfulapi to post to", { data, cart }, function (data, status) {
+        $.post("restfulapi to post to", { cart }, function (data, status) {
             alert("Data: " + data + "\nStatus: " + status)
         });
 
