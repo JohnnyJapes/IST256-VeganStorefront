@@ -1,7 +1,7 @@
 [
     {
         "productID": "524",
-        "productName": "Test Name",
+        "productName": "Test AJAX product",
         "description": "asd",
         "category": "Vegetables",
         "price": "7.99",
@@ -10,7 +10,7 @@
     },
     {
         "productID": "849",
-        "productName": "Test name Number 2",
+        "productName": "JSON FILE product",
         "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, soluta voluptate fugiat ",
         "category": "Meat Alternative",
         "price": "16.99",
@@ -19,7 +19,7 @@
     },
     {
         "productID": "623",
-        "productName": "Vegan hat",
+        "productName": "Vegan hat 2",
         "description": "Vegan hat for vegans",
         "category": "Merchandise",
         "price": "29.99",
