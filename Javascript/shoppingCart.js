@@ -96,6 +96,7 @@ $(document).ready(function () {
     alertPlaceholder = $("#alertPlaceholder");
     cart.updateCart();
     getProducts();
+    loadProductStorage(products);
     getCartInfo();
     $('#checkOut').click(function () {
         // Handle Checkout
@@ -205,32 +206,19 @@ $(document).ready(function () {
         return index;
 
     }
-    //pass element and error message
-    function addInvalid(element, error) {
-        try {
-            if (element.classList.contains("is-valid")) {
-                element.classList.remove("is-valid")
-            }
-            element.classList.add("is-invalid");
-            element.nextElementSibling.textContent = error;
-
-        } catch (e) {
-            if (element.hasClass("is-valid")) element.removeClass("is-valid");
-            element.addClass("is-invalid");
-            element.next().text(error);
+    function loadProductStorage(array) {
+        try { productArray = $.parseJSON(localStorage.getItem("productStorage")) }
+        catch {
+            console.log("empty product")
+            productArray = []
+            return
+        }
+        for (let i = 0; i < productArray.length; i++) {
+            products.push(productArray[i])
+            $("#productSelect").append(`
+            <option value=${productArray[i].productID}>${productArray[i].productName}</option>`)
         }
     }
-    //pass element
-    function makeValid(element) {
-        try {
-            element.classList.remove("is-invalid");
-
-        } catch (error) {
-            element.removeClass("is-invalid");
-
-        }
-    }
-
 });
 
 
