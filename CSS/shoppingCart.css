@@ -13,21 +13,21 @@ html {
 .nav-item a:hover {
 		background-color: #A0A0A0;
 	  }
-      #cart {
+      /* #cart {
         width: 60%;
         margin-left: 15px
-    }
+    } */
 
-    #quanity {
-        width: 10%;
-    }
+    /* #summary {
+        width: 18rem;
+    } */
 
     .cartItem {
         margin-bottom: 15px;
     }
 
     #summary {
-        float: right;
-        width: 10%;
-        margin-right: 100px;
+        /* float: right; */
+        /* width: 10%; */
+        /* margin-right: 100px; */
     }
