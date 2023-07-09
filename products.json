@@ -1,0 +1,29 @@
+[
+    {
+        "productID": "1",
+        "productName": "Test Name",
+        "description": "asd",
+        "category": "Vegetables",
+        "price": "7.99",
+        "weight": "2",
+        "unitOfMeasure": "Grams"
+    },
+    {
+        "productID": "2",
+        "productName": "Test name Number 2",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, soluta voluptate\n                    fugiat\n                    cum dolor nemo unde exercitationem reiciendis dolores consequuntur delectus! Blanditiis praesentium\n                    sunt\n                    accusamus voluptatem culpa ipsa molestias qui.",
+        "category": "Meat Alternative",
+        "price": "16.99",
+        "weight": "5",
+        "unitOfMeasure": "Pounds"
+    },
+    {
+        "productID": "003",
+        "productName": "Vegan hat",
+        "description": "Vegan hat for vegans",
+        "category": "Merchandise",
+        "price": "29.99",
+        "weight": 0,
+        "unitOfMeasure": "Kilograms"
+    }
+]
