@@ -142,8 +142,11 @@ $(document).ready(function () {
         $.get("Placeholder API", function (data, status) {
             console.log(data.product)
             alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+            for (let i = 0; i < data.length; i++) {
+                cart.addItem(data[i])
+            }
         }).fail(function () {
-            console.log("AJAX CART FAIL")
+            console.log("AJAX cart retrieval failed")
         });
     }
     function getProducts() {
@@ -154,8 +157,6 @@ $(document).ready(function () {
                 $("#productSelect").append(`
                 <option value=${data[i].productID}>${data[i].productName}</option>`)
             }
-
-
         }).fail(function () {
             console.log("AJAX PRODUCT FAIL")
 
@@ -167,7 +168,7 @@ $(document).ready(function () {
         $.post("restfulapi to post to", { cart }, function (data, status) {
             alert("Data: " + data + "\nStatus: " + status)
         }).fail(function () {
-            console.log("AJAX CART FAIL")
+            console.log("AJAX cart update failed")
         });;
 
     }
