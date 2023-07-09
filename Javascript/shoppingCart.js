@@ -5,7 +5,23 @@ class Cart {
     }
 
     addItem(item) {
-        this.items.push(item);
+        let index = this.checkDuplicate(item.productID)
+        console.log(index)
+        if (item.quantity != null) {
+            this.items.push(item);
+        }
+
+        else if (index >= 0) {
+            this.items[index].quantity++
+        }
+        else {
+            let newItem = {
+                product: item,
+                quantity: 1
+            }
+            this.items.push(newItem);
+        }
+
         this.updateCart();
     }
 
@@ -20,6 +36,16 @@ class Cart {
         this.items[index].quantity = quantity;
         this.updateCart();
     }
+    checkDuplicate(id) {
+        let index = -1;
+        for (let i = 0; i < this.items.length; i++) {
+            if (this.items[i].product.productID == id) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
 
     getTotal() {
         let total = 0;
@@ -62,9 +88,9 @@ class Cart {
 
 // Initialize Cart
 let cart = new Cart();
+let products = [];
 // On document ready
 $(document).ready(function () {
-
     let alertPlaceholder
     loadCart();
     alertPlaceholder = $("#alertPlaceholder");
@@ -85,17 +111,10 @@ $(document).ready(function () {
     $('#addItem').click(function () {
         // Add Item
         // Add your logic here to get the item to be added
-        let item = {
-            product: {
-                productName: 'New Product',
-                price: 20.00,
-                description: 'New Product Description'
-            },
-            quantity: 1,
-
-        };
-
-        cart.addItem(item);
+        value = $('#productSelect').val()
+        index = findItem(value);
+        console.log(index)
+        cart.addItem(products[index]);
     });
     //load cart from local storage
     function loadCart() {
@@ -125,11 +144,30 @@ $(document).ready(function () {
         });
     }
     function getProducts() {
+        let item = {
+
+            productName: 'Test Product',
+            productID: 35,
+            price: 20.00,
+            description: 'New Product Description'
+
+        };
+        products.push(item);
+        $("#productSelect").append(`
+        <option value=${item.productID}>${item.productName}</option>`)
         $.getJSON("products.json", function (data, status) {
-            alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+            //alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+            for (let i = 0; i < data.length; i++) {
+                $("#productSelect").append(`
+                <option value=${data[i].productID}>${data[i].productName}</option>`)
+            }
+            products = data;
+            products.push(item);
 
         }).fail(function () {
             console.log("AJAX PRODUCT FAIL")
+            products.push(item);
+            console.log(products[0])
         });
     }
 
@@ -156,6 +194,41 @@ $(document).ready(function () {
             `   <div>${message}</div>` +
             '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
             '</div>')
+    }
+    function findItem(id) {
+        let index = -1;
+        for (let i = 0; i < products.length; i++) {
+            if (products[i].productID == id) {
+                index = i;
+            }
+        }
+        return index;
+
+    }
+    //pass element and error message
+    function addInvalid(element, error) {
+        try {
+            if (element.classList.contains("is-valid")) {
+                element.classList.remove("is-valid")
+            }
+            element.classList.add("is-invalid");
+            element.nextElementSibling.textContent = error;
+
+        } catch (e) {
+            if (element.hasClass("is-valid")) element.removeClass("is-valid");
+            element.addClass("is-invalid");
+            element.next().text(error);
+        }
+    }
+    //pass element
+    function makeValid(element) {
+        try {
+            element.classList.remove("is-invalid");
+
+        } catch (error) {
+            element.removeClass("is-invalid");
+
+        }
     }
 
 });

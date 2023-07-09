@@ -51,9 +51,20 @@
         </div>
     </nav>
     <div id="alertPlaceholder"></div>
+    <h3 class="mx-4">Add More products:</h3>
+    <div class="row mx-4">
+        <select class="form-select" aria-label="Default select example" id="productSelect">
+
+        </select>
+        <div class="invalid-feedback">
+            Please enter select a valid product
+        </div>
+
+    </div>
+    <a href="#" class="btn btn-primary my-2 mx-4" id="addItem">Add</a>
     <h3 class="m-4">Shopping Cart</h3>
     <div class="row mx-2">
-        <div class="container col col-xl-8" id="cart">
+        <div class="container col-12 col-xl-8" id="cart">
             <div class="cartItem" hidden>
                 <div class="card">
                     <div class="card-body">
@@ -77,8 +88,7 @@
             </div>
         </div>
     </div>
-    <div class="container mb-3">
-        <a href="#" class="btn btn-primary mb-3" id="addItem">Add</a>
+    <div class="container-fluid mb-3 mx-3 justify-content-start">
         <a href="#" class="btn btn-success mb-3" id="checkOut">Check Out</a>
     </div>
     <div class="container mb-3 pb-3">
