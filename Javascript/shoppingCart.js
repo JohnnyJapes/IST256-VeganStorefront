@@ -70,12 +70,12 @@ $(document).ready(function () {
     alertPlaceholder = $("#alertPlaceholder");
     cart.updateCart();
     getProducts();
+    getCartInfo();
     $('#checkOut').click(function () {
         // Handle Checkout
         // This part can be customized according to your needs
         updateJSONtext();
         //getUserInfo();
-        getCartInfo();
         updateCart();
         //sendUser();
         //alert('Checking out. Thank you for your purchase!');
@@ -126,7 +126,7 @@ $(document).ready(function () {
     }
     function getProducts() {
         $.getJSON("products.json", function (data, status) {
-            alert("Data: " + data + "\nStatus: " + status);
+            alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
 
         }).fail(function () {
             console.log("AJAX PRODUCT FAIL")
