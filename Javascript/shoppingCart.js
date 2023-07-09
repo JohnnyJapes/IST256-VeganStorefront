@@ -70,7 +70,7 @@ class Cart {
                             <p class="card-text">Price: ${item.product.price}</p>
                             <p class="card-text text-truncate">Description: ${item.product.description}</p>
                             <label for="quantity" class="form-label">Quantity:</label>
-                            <div class="input-group mb-3" id="quantity">
+                            <div class="input-group mb-1" id="quantity">
                                 <input type="number" class="form-control" value="${item.quantity}" onchange="cart.updateItemQuantity(${i}, this.value)">
                             </div>
                             <p class="card-text">Total: ${item.product.price * item.quantity}</p>
@@ -145,15 +145,7 @@ $(document).ready(function () {
         });
     }
     function getProducts() {
-        let item = {
 
-            productName: 'Test Product',
-            productID: 35,
-            price: 20.00,
-            description: 'New Product Description'
-
-        };
-        products.push(item);
         $("#productSelect").append(`
         <option value=${item.productID}>${item.productName}</option>`)
         $.getJSON("products.json", function (data, status) {
@@ -163,11 +155,11 @@ $(document).ready(function () {
                 <option value=${data[i].productID}>${data[i].productName}</option>`)
             }
             products = data;
-            products.push(item);
+
 
         }).fail(function () {
             console.log("AJAX PRODUCT FAIL")
-            products.push(item);
+
             console.log(products[0])
         });
     }
@@ -218,6 +210,15 @@ $(document).ready(function () {
             $("#productSelect").append(`
             <option value=${productArray[i].productID}>${productArray[i].productName}</option>`)
         }
+        let item = {
+
+            productName: 'Test Product',
+            productID: 35,
+            price: 20.00,
+            description: 'New Product Description'
+
+        };
+        products.push(item);
     }
 });
 
