@@ -148,10 +148,10 @@ $(document).ready(function () {
         $.getJSON("products.json", function (data, status) {
             //alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
             for (let i = 0; i < data.length; i++) {
+                products.push(data[i])
                 $("#productSelect").append(`
                 <option value=${data[i].productID}>${data[i].productName}</option>`)
             }
-            products = data;
 
 
         }).fail(function () {
