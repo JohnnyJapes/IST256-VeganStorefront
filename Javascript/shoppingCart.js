@@ -96,7 +96,7 @@ $(document).ready(function () {
     alertPlaceholder = $("#alertPlaceholder");
     cart.updateCart();
     getProducts();
-    loadProductStorage(products);
+    loadProductStorage();
     getCartInfo();
     $('#checkOut').click(function () {
         // Handle Checkout
@@ -145,9 +145,6 @@ $(document).ready(function () {
         });
     }
     function getProducts() {
-
-        $("#productSelect").append(`
-        <option value=${item.productID}>${item.productName}</option>`)
         $.getJSON("products.json", function (data, status) {
             //alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
             for (let i = 0; i < data.length; i++) {
@@ -198,7 +195,7 @@ $(document).ready(function () {
         return index;
 
     }
-    function loadProductStorage(array) {
+    function loadProductStorage() {
         try { productArray = $.parseJSON(localStorage.getItem("productStorage")) }
         catch {
             console.log("empty product")
@@ -218,6 +215,8 @@ $(document).ready(function () {
             description: 'New Product Description'
 
         };
+        $("#productSelect").append(`
+        <option value=${item.productID}>${item.productName}</option>`)
         products.push(item);
     }
 });
