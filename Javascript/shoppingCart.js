@@ -118,10 +118,11 @@ $(document).ready(function () {
     function getCartInfo() {
 
         $.get("Placeholder API", function (data, status) {
-
+            console.log(data.product)
             alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+        }).fail(function () {
+            console.log("AJAX CART FAIL")
         });
-
     }
     function getProducts() {
         $.getJSON("products.json", function (data, status) {
@@ -135,7 +136,9 @@ $(document).ready(function () {
     function updateCart() {
         $.post("restfulapi to post to", { cart }, function (data, status) {
             alert("Data: " + data + "\nStatus: " + status)
-        });
+        }).fail(function () {
+            console.log("AJAX CART FAIL")
+        });;
 
     }
 
