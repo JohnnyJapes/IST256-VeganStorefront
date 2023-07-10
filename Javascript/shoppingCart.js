@@ -74,7 +74,7 @@ class Cart {
                                 <input type="number" class="form-control" value="${item.quantity}" onchange="cart.updateItemQuantity(${i}, this.value)">
                             </div>
                             <p class="card-text">Total: ${item.product.price * item.quantity}</p>
-                            <a href="#" class="btn btn-danger" onclick="cart.removeItem(${i})">Remove</a>
+                            <button class="btn btn-danger" onclick="cart.removeItem(${i})">Remove</button>
                         </div>
                     </div>
                 </div>
@@ -223,7 +223,7 @@ $(document).ready(function () {
         $("#productSelect").append(`
         <option value=${item.productID}>${item.productName}</option>`)
         products.push(item);
-        let item = {
+        item = {
 
             productName: 'Testing Product 2',
             productID: 40,
@@ -234,7 +234,7 @@ $(document).ready(function () {
         $("#productSelect").append(`
         <option value=${item.productID}>${item.productName}</option>`)
         products.push(item);
-        let item = {
+        item = {
 
             productName: 'Testing Product 3',
             productID: 56,
