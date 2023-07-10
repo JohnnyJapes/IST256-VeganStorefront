@@ -223,6 +223,28 @@ $(document).ready(function () {
         $("#productSelect").append(`
         <option value=${item.productID}>${item.productName}</option>`)
         products.push(item);
+        let item = {
+
+            productName: 'Testing Product 2',
+            productID: 40,
+            price: 29.99,
+            description: 'New Product Description'
+
+        };
+        $("#productSelect").append(`
+        <option value=${item.productID}>${item.productName}</option>`)
+        products.push(item);
+        let item = {
+
+            productName: 'Testing Product 3',
+            productID: 56,
+            price: 6.99,
+            description: 'New Product Description'
+
+        };
+        $("#productSelect").append(`
+        <option value=${item.productID}>${item.productName}</option>`)
+        products.push(item);
     }
 });
 
