@@ -167,13 +167,11 @@ $(document).ready(function () {
         const set = new Set([1, 2, 3])
         if (!set.has(parseInt(category.val()))) {
             console.log(category.val())
-            category.addClass("is-invalid");
-            category.next().text("Please Select a Category");
+            addInvalid(category, "Please Select a Category");
             return false;
         }
         else {
-            category.removeClass("is-invalid");
-            category.addClass("is-valid");
+            makeValid(category)
             return true;
         }
     }
@@ -181,13 +179,11 @@ $(document).ready(function () {
     function validatePrice() {
         var price = $('#price');
         if (isNaN(price.val()) || price.val() <= 0) {
-            price.addClass("is-invalid");
-            price.next().text("Price should be a positive number");
+            addInvalid(price, "Price should be a positive number");
             return false;
         }
         else {
-            price.removeClass("is-invalid");
-            price.addClass("is-valid");
+            makeValid(price)
             return true;
         }
     }
@@ -195,18 +191,15 @@ $(document).ready(function () {
         // Validate weight
         var weight = $('#weight').val();
         if (!weight) {
-            $('#weight').removeClass("is-invalid");
-            $('#weight').addClass("is-valid");
+            makeValid(weight);
             return true
         }
         if (isNaN(weight) || weight <= 0) {
-            $('#weight').addClass("is-invalid");
-            $('#weight').next().text("Weight should be a positive number");
+            addInvalid(weight, "Weight should be a positive number");
             return false;
         }
         else {
-            $('#weight').removeClass("is-invalid");
-            $('#weight').addClass("is-valid");
+            makeValid(weight)
             return true;
         }
     }
@@ -216,13 +209,11 @@ $(document).ready(function () {
         const set = new Set([1, 2, 3, 4, 5])
         if (!set.has(parseInt(unit.val()))) {
             console.log(unit.val())
-            unit.addClass("is-invalid");
-            unit.next().text("Please Select a Unit of measurement");
+            addInvalid(unit, "Please Select a Unit of measurement");
             return false;
         }
         else {
-            unit.removeClass("is-invalid");
-            unit.addClass("is-valid");
+            makeValid(unit);
             return true;
         }
     }
