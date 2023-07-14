@@ -1,6 +1,11 @@
 $(document).ready(function () {
-
-
+    let form = $("#shippingForm");
+    let city = $("#city");
+    let address = $("#address");
+    let state = $("#state");
+    let zip = $("#zip");
+    let carrier = $("#carrier");
+    let shipping = $("#shipping");
 
     //pass element and error message
     function addInvalid(element, error) {
