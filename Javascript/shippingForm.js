@@ -5,7 +5,7 @@ $(document).ready(function () {
     let state = $("#state");
     let zip = $("#zipCode");
     let carrier = $("#carrier");
-    let shipping = $("#shipping");
+    let method = $("#method");
 
     //pass element and error message
     function addInvalid(element, error) {
