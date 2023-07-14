@@ -3,7 +3,7 @@ $(document).ready(function () {
     let city = $("#city");
     let address = $("#address");
     let state = $("#state");
-    let zip = $("#zip");
+    let zip = $("#zipCode");
     let carrier = $("#carrier");
     let shipping = $("#shipping");
 
