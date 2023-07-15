@@ -34,7 +34,8 @@ $(document).ready(function () {
     function submit() {
         event.preventDefault();
         event.stopPropagation();
-        if (!formValidation) {
+        console.log("submit")
+        if (!formValidation()) {
             return
         }
 
@@ -98,7 +99,7 @@ $(document).ready(function () {
 
     }
     function validateCarrier() {
-        if (carrier.val() == 0) {
+        if (!carrier.val()) {
             console.log(carrier.val())
             addInvalid(carrier, "Please Select a Category");
             return false;
@@ -110,9 +111,9 @@ $(document).ready(function () {
     }
     function validateShippingMethod() {
 
-        if (method.val() == 0) {
+        if (!method.val()) {
             console.log(method.val())
-            addInvalid(method, "Please Select a Method");
+            addInvalid(method, "Please Select a Shipping Method");
             return false;
         }
         else {
