@@ -125,10 +125,11 @@
                 <!-- Bootstrap Button -->
                 <button type="submit" class="btn btn-primary" id="add" ng-click="displayJSON()">Submit</button>
             </form>
-        </div>
-        <div class="mb-2 py-2" id="shippingJSON" ng-show="showJSON">
-            <h2>Shipping JSON:</h2>
-            <p>{{shippingJSON | json}}</p>
+
+            <div class="mb-2 px-2 py-2" id="shippingJSON" ng-show="showJSON">
+                <h2>Shipping JSON:</h2>
+                <p>{{shippingJSON | json}}</p>
+            </div>
         </div>
     </div>
 

@@ -29,7 +29,19 @@ $(document).ready(function () {
     let carrier = $("#carrier");
     let method = $("#method");
 
+    //jQuery Listeners
     form.on("submit", submit);
+    city.on("input", validateCity);
+    city.on("focusout", validateCity);
+    address.on("input", validateAddress);
+    address.on("focusout", validateAddress);
+    state.on("input", validateState);
+    state.on("focusout", validateState);
+    zip.on("input", validateZIP);
+    zip.on("focusout", validateZIP);
+    carrier.on("change", validateCarrier);
+    method.on("change", validateShippingMethod);
+
 
     function submit() {
         event.preventDefault();
@@ -54,11 +66,11 @@ $(document).ready(function () {
 
         // Validate State
 
-        // if (!vvalidateState()) isValid = false;
+        if (!validateState()) isValid = false;
 
         // Validate zip code
 
-        //if (!validateZipCode()) isValid = false;
+        if (!validateZIPCode()) isValid = false;
 
         // Validate Carrier
         if (!validateCarrier()) isValid = false;
@@ -69,6 +81,7 @@ $(document).ready(function () {
 
         return isValid;
     }
+    //Individual Validation functions
 
     function validateAddress() {
         const re = /^[0-9]+\s[a-zA-Z\s]+$/gm
@@ -121,6 +134,40 @@ $(document).ready(function () {
             return true;
         }
     }
+    // ZIP validation function
+    function validateZIP() {
+        const regex = new RegExp(/(^\d{5}$)|(^\d{5}-\d{4}$)/);
+        if (!zip.val()) {
+            addInvalid(zip, "Please enter a ZIP code.");
+            return false;
+        }
+        else if (!regex.test(zip.val())) {
+            addInvalid(zip, "Please enter a valid ZIP code.");
+            return false;
+        }
+        else {
+            makeValid(zip);
+            return true;
+        }
+    }
+    // State validation function
+    function validateState() {
+        const states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
+        if (!state.val()) {
+            addInvalid(state, "Please enter a state.");
+            return false;
+        }
+        else if (!states.includes(state.val().toUpperCase())) {
+            addInvalid(state, "Please enter a valid state abbreviation.");
+            return false;
+        }
+        else {
+            makeValid(state);
+            return true;
+        }
+    }
+
+
 
     //AJAX FUNCTIONS
     function getShippingInfo() {
