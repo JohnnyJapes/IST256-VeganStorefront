@@ -48,11 +48,11 @@ $(document).ready(function () {
         event.stopPropagation();
         console.log("submit")
         if (!formValidation()) {
+            appendAlert("Some fields are invalid.", "danger");
             return
         }
 
-        shppingAddress = shippingJson();
-
+        appendAlert("Successfully Submitted", "success");
     }
     // Form validation function
     function formValidation() {
@@ -70,7 +70,7 @@ $(document).ready(function () {
 
         // Validate zip code
 
-        if (!validateZIPCode()) isValid = false;
+        if (!validateZIP()) isValid = false;
 
         // Validate Carrier
         if (!validateCarrier()) isValid = false;
@@ -239,6 +239,13 @@ $(document).ready(function () {
 
 
         }
+    }
+    function appendAlert(message, type) {
+        let alertPlaceholder = $("#alertPlaceholder");
+        alertPlaceholder.html(`<div class="alert alert-${type} alert-dismissible" role="alert">` +
+            `   <div>${message}</div>` +
+            '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+            '</div>')
     }
 })
 
