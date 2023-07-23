@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>User Signup</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="CSS/ShopperEdit.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.js" crossorigin="anonymous"></script>
+    <script src="JS/signup.js"></script>
+    <style>
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+
+        footer {
+            background-color: #D1D1D1;
+        }
+
+        nav {
+            overflow: hidden;
+        }
+
+        .nav-item a:hover {
+            background-color: #A0A0A0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Bootstrap Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#homepageurl">Vegan Foods</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../catalog.html">Product Catalog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../ShopperEdit.html">Shopper Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../ProductForm.html">Product Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../shoppingCart.html">Shopping Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../shippingForm.html">Shipping Form</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="signup.html">Sign Up</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="userlogin.html">Log In</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container mb-5">
+        <div id="alertPlaceholder"></div>
+        <h1>Shopper Signup</h1>
+
+        <!-- Bootstrap Form with validation-->
+        <form action="send to location here" id="userForm" class="needs-validation" novalidate>
+            <div class="mb-2">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+                <div class="invalid-feedback">
+                    Please enter a valid email.
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="passInput" class="form-label">Password:</label>
+                <input type="password" class="form-control" id="passInput" aria-roledescription="Enter Password"
+                    placeholder="Enter Password">
+                <span class="invalid-feedback"></span>
+            </div>
+            <div class="mb-2">
+                <label for="passConfirmInput" class="form-label">Password Confirmation:</label>
+                <input type="password" class="form-control" id="passConfirmInput"
+                    aria-roledescription="Confrim Password" placeholder="Confirm Password">
+                <span class="invalid-feedback"></span>
+            </div>
+            <div class="mb-2 row">
+                <div class="col-sm-6" id="name">
+                    <label for="fName" class="form-label">First Name:</label>
+                    <input type="text" class="form-control" id="fName" name="fName" required>
+                    <div class="invalid-feedback">
+                        Please enter a valid name.
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label for="lName" class="form-label">Last Name:</label>
+                    <input type="text" class="form-control" id="lName" name="lName" required>
+                    <div class="invalid-feedback">
+                        Please enter a valid name.
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="age" class="form-label">Age:</label>
+                <input type="number" class="form-control" id="age" name="age" required>
+                <div class="invalid-feedback">
+                    Please enter a valid age.
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="address" class="form-label">Address:</label>
+                <input type="text" class="form-control" id="address" name="address" required>
+                <div class="invalid-feedback">
+                    Please enter a valid address.
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="phonenum" class="form-label">Phone Number (Optional):</label>
+                <input type="tel" class="form-control" id="phonenum" name="phonenum">
+                <div class="invalid-feedback">
+                    Please enter a valid phone number.
+                </div>
+            </div>
+            <!-- Bootstrap Button -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+
+    <footer
+        class="position-absolute bottom-0 start-50 translate-middle-x text-bg-light text-center container-fluid mt-3">
+        &copy;Vegan Foods 2023
+    </footer>
+
+</body>
+
+</html>
