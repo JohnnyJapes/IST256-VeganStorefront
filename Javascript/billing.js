@@ -1,5 +1,5 @@
 //AJAX FUNCTIONS
-function getShippingInfo() {
+function getbillingInfo() {
     let id = "";
     let name = "session";
     let decodedCookie = decodeURIComponent(document.cookie);
@@ -14,7 +14,7 @@ function getShippingInfo() {
         }
     }
 
-    $.getJSON("http://130.203.136.203:3004/shipping", { session: id }, function (data, status) {
+    $.getJSON("http://130.203.136.203:3004/billing", { session: id }, function (data, status) {
         console.log(data)
         let json = "";
         for (key in data) {
@@ -24,7 +24,7 @@ function getShippingInfo() {
         alert("Found Address for Account: \n " + json + "\nStatus: " + status);
 
     }).fail(function () {
-        console.log("AJAX shipping retrieval failed")
+        console.log("AJAX billing retrieval failed")
     });
 }
 
@@ -33,30 +33,39 @@ function getShippingInfo() {
 
 
 //ANGULAR JS
-let shippingApp = angular.module('shippingApp', []);
-shippingApp.controller('shippingController', function ($scope, $controller) {
-    getShippingInfo()
+let billingApp = angular.module('billingApp', []);
+billingApp.controller('billingController', function ($scope, $controller) {
+    getbillingInfo()
     $scope.showJSON = false
     $scope.displayJSON = function () {
-        $scope.shippingJSON = {
-            address: $scope.address,
-            city: $scope.city,
-            state: $scope.state,
-            zip: $scope.zip,
-            carrier: $scope.carrier,
-            method: $scope.method
+        $scope.billingJSON = {
+            card: {
+                name: $scope.fName + " " + $scope.lName,
+                number: $scope.cardNum,
+                cvv: $scope.cvvNum,
+                expiration: {
+                    month: $scope.month,
+                    year: $scope.year
+                }
+            },
+            billingAddress: {
+                address: $scope.address,
+                city: $scope.city,
+                state: $scope.state,
+                zip: $scope.zip
+            }
         }
         console.log('angular')
-        console.log($scope.shippingJSON)
-        for (key in $scope.shippingJSON) {
-            if ($scope.shippingJSON[key]) $scope.showJSON = true
+        console.log($scope.billingJSON)
+        for (key in $scope.billingJSON) {
+            if ($scope.billingJSON[key]) $scope.showJSON = true
         };
 
     }
 })
 
 $(document).ready(function () {
-    let form = $("#shippingForm");
+    let form = $("#billingForm");
     let city = $("#city");
     let address = $("#address");
     let state = $("#state");
@@ -74,8 +83,6 @@ $(document).ready(function () {
     state.on("focusout", validateState);
     zip.on("input", validateZIP);
     zip.on("focusout", validateZIP);
-    carrier.on("change", validateCarrier);
-    method.on("change", validateShippingMethod);
 
 
     function submit() {
@@ -86,7 +93,7 @@ $(document).ready(function () {
             appendAlert("Some fields are invalid.", "danger");
             return
         }
-        updateShipping();
+        updatebilling();
         appendAlert("Successfully Submitted", "success");
     }
     // Form validation function
@@ -106,12 +113,6 @@ $(document).ready(function () {
         // Validate zip code
 
         if (!validateZIP()) isValid = false;
-
-        // Validate Carrier
-        if (!validateCarrier()) isValid = false;
-
-        // Validate shipping method
-        if (!validateShippingMethod()) isValid = false;
 
 
         return isValid;
@@ -146,29 +147,6 @@ $(document).ready(function () {
         }
 
     }
-    function validateCarrier() {
-        if (!carrier.val()) {
-            console.log(carrier.val())
-            addInvalid(carrier, "Please Select a Category");
-            return false;
-        }
-        else {
-            makeValid(carrier)
-            return true;
-        }
-    }
-    function validateShippingMethod() {
-
-        if (!method.val()) {
-            console.log(method.val())
-            addInvalid(method, "Please Select a Shipping Method");
-            return false;
-        }
-        else {
-            makeValid(method)
-            return true;
-        }
-    }
     // ZIP validation function
     function validateZIP() {
         const regex = new RegExp(/(^\d{5}$)|(^\d{5}-\d{4}$)/);
@@ -201,14 +179,6 @@ $(document).ready(function () {
             return true;
         }
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -248,8 +218,8 @@ $(document).ready(function () {
             '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
             '</div>')
     }
-    function shippingJson() {
-        let session = "";
+    function billingJson() {
+        let session = "guest";
         let name = "session";
         let decodedCookie = decodeURIComponent(document.cookie);
         let ca = decodedCookie.split(';');
@@ -262,26 +232,36 @@ $(document).ready(function () {
                 session = c.substring(name.length + 1, c.length);
             }
         }
-        let shippingAddress = {
-            address: address.val(),
-            city: city.val(),
-            state: state.val(),
-            zip: zip.val(),
-            carrier: carrier.val(),
-            method: method.val(),
+        let billing = {
+            card: {
+                name: $("#fName").val() + " " + $("#lName").val(),
+                number: $("#cardNum").val(),
+                cvv: $("#cvvNum").val(),
+                expiration: {
+                    month: $("#month").val(),
+                    year: $("#year").val()
+                }
+            },
+            billingAddress: {
+                address: address.val(),
+                city: city.val(),
+                state: state.val(),
+                zip: zip.val(),
+            },
             owner: session
+
         }
-        return shippingAddress;
+        return billing;
     }
-    function updateShipping() {
-        // $.post("restfulapi to post to", { shippingJSON() }, function (data, status) {
+    function updatebilling() {
+        // $.post("restfulapi to post to", { billingJSON() }, function (data, status) {
         //     alert("Data: " + data + "\nStatus: " + status)
         // }).fail(function () {
-        //     console.log("AJAX shipping update failed")
+        //     console.log("AJAX billing update failed")
         // });
         $.ajax({
-            url: "http://localhost:3004/shipping",
-            data: JSON.stringify(shippingJson()),
+            url: "http://localhost:3004/billing",
+            data: JSON.stringify(billingJson()),
             //dataType: "json",
             type: "POST",
             contentType: "application/json",

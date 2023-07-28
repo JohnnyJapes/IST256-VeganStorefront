@@ -71,7 +71,7 @@ $(document).ready(function () {
         }
         console.log(json)
         $.ajax({
-            url: "http://localhost:3004/register",
+            url: "http://130.203.136.203:3004/register",
             data: JSON.stringify(jsonUser),
             //dataType: "json",
             type: "POST",

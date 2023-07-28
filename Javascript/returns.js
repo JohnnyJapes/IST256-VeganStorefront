@@ -1,5 +1,5 @@
 //AJAX FUNCTIONS
-function getShippingInfo() {
+function getReturnsInfo() {
     let id = "";
     let name = "session";
     let decodedCookie = decodeURIComponent(document.cookie);
@@ -14,7 +14,7 @@ function getShippingInfo() {
         }
     }
 
-    $.getJSON("http://130.203.136.203:3004/shipping", { session: id }, function (data, status) {
+    $.getJSON("http://130.203.136.203:3004/returns", { session: id }, function (data, status) {
         console.log(data)
         let json = "";
         for (key in data) {
@@ -24,7 +24,7 @@ function getShippingInfo() {
         alert("Found Address for Account: \n " + json + "\nStatus: " + status);
 
     }).fail(function () {
-        console.log("AJAX shipping retrieval failed")
+        console.log("AJAX returns retrieval failed")
     });
 }
 
@@ -33,30 +33,26 @@ function getShippingInfo() {
 
 
 //ANGULAR JS
-let shippingApp = angular.module('shippingApp', []);
-shippingApp.controller('shippingController', function ($scope, $controller) {
-    getShippingInfo()
+let returnsApp = angular.module('returnsApp', []);
+returnsApp.controller('returnsController', function ($scope, $controller) {
+    getReturnsInfo()
     $scope.showJSON = false
     $scope.displayJSON = function () {
-        $scope.shippingJSON = {
-            address: $scope.address,
-            city: $scope.city,
-            state: $scope.state,
-            zip: $scope.zip,
-            carrier: $scope.carrier,
-            method: $scope.method
+        $scope.returnsJSON = {
+            order: $scope.orderNum,
+            description: $scope.description
         }
         console.log('angular')
-        console.log($scope.shippingJSON)
-        for (key in $scope.shippingJSON) {
-            if ($scope.shippingJSON[key]) $scope.showJSON = true
+        console.log($scope.returnsJSON)
+        for (key in $scope.returnsJSON) {
+            if ($scope.returnsJSON[key]) $scope.showJSON = true
         };
 
     }
 })
 
 $(document).ready(function () {
-    let form = $("#shippingForm");
+    let form = $("#returnsForm");
     let city = $("#city");
     let address = $("#address");
     let state = $("#state");
@@ -70,12 +66,6 @@ $(document).ready(function () {
     city.on("focusout", validateCity);
     address.on("input", validateAddress);
     address.on("focusout", validateAddress);
-    state.on("input", validateState);
-    state.on("focusout", validateState);
-    zip.on("input", validateZIP);
-    zip.on("focusout", validateZIP);
-    carrier.on("change", validateCarrier);
-    method.on("change", validateShippingMethod);
 
 
     function submit() {
@@ -86,7 +76,7 @@ $(document).ready(function () {
             appendAlert("Some fields are invalid.", "danger");
             return
         }
-        updateShipping();
+        updateReturns();
         appendAlert("Successfully Submitted", "success");
     }
     // Form validation function
@@ -99,19 +89,6 @@ $(document).ready(function () {
         //validate City
         if (!validateCity()) isValid = false;
 
-        // Validate State
-
-        if (!validateState()) isValid = false;
-
-        // Validate zip code
-
-        if (!validateZIP()) isValid = false;
-
-        // Validate Carrier
-        if (!validateCarrier()) isValid = false;
-
-        // Validate shipping method
-        if (!validateShippingMethod()) isValid = false;
 
 
         return isValid;
@@ -146,29 +123,6 @@ $(document).ready(function () {
         }
 
     }
-    function validateCarrier() {
-        if (!carrier.val()) {
-            console.log(carrier.val())
-            addInvalid(carrier, "Please Select a Category");
-            return false;
-        }
-        else {
-            makeValid(carrier)
-            return true;
-        }
-    }
-    function validateShippingMethod() {
-
-        if (!method.val()) {
-            console.log(method.val())
-            addInvalid(method, "Please Select a Shipping Method");
-            return false;
-        }
-        else {
-            makeValid(method)
-            return true;
-        }
-    }
     // ZIP validation function
     function validateZIP() {
         const regex = new RegExp(/(^\d{5}$)|(^\d{5}-\d{4}$)/);
@@ -185,31 +139,6 @@ $(document).ready(function () {
             return true;
         }
     }
-    // State validation function
-    function validateState() {
-        const states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
-        if (!state.val()) {
-            addInvalid(state, "Please enter a state.");
-            return false;
-        }
-        else if (!states.includes(state.val().toUpperCase())) {
-            addInvalid(state, "Please enter a valid state abbreviation.");
-            return false;
-        }
-        else {
-            makeValid(state);
-            return true;
-        }
-    }
-
-
-
-
-
-
-
-
-
 
 
     //pass element and error message
@@ -248,8 +177,8 @@ $(document).ready(function () {
             '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
             '</div>')
     }
-    function shippingJson() {
-        let session = "";
+    function returnsJson() {
+        let session = "guest";
         let name = "session";
         let decodedCookie = decodeURIComponent(document.cookie);
         let ca = decodedCookie.split(';');
@@ -262,26 +191,36 @@ $(document).ready(function () {
                 session = c.substring(name.length + 1, c.length);
             }
         }
-        let shippingAddress = {
-            address: address.val(),
-            city: city.val(),
-            state: state.val(),
-            zip: zip.val(),
-            carrier: carrier.val(),
-            method: method.val(),
+        let returns = {
+            card: {
+                name: $("#fName").val() + " " + $("#lName").val(),
+                number: $("#cardNum").val(),
+                cvv: $("#cvvNum").val(),
+                expiration: {
+                    month: $("#month").val(),
+                    year: $("#year").val()
+                }
+            },
+            returnsAddress: {
+                address: address.val(),
+                city: city.val(),
+                state: state.val(),
+                zip: zip.val(),
+            },
             owner: session
+
         }
-        return shippingAddress;
+        return returns;
     }
-    function updateShipping() {
-        // $.post("restfulapi to post to", { shippingJSON() }, function (data, status) {
+    function updateReturns() {
+        // $.post("restfulapi to post to", { returnsJSON() }, function (data, status) {
         //     alert("Data: " + data + "\nStatus: " + status)
         // }).fail(function () {
-        //     console.log("AJAX shipping update failed")
+        //     console.log("AJAX returns update failed")
         // });
         $.ajax({
-            url: "http://localhost:3004/shipping",
-            data: JSON.stringify(shippingJson()),
+            url: "http://localhost:3004/returns",
+            data: JSON.stringify(returnsJson()),
             //dataType: "json",
             type: "POST",
             contentType: "application/json",
