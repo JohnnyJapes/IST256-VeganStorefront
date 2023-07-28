@@ -1,6 +1,6 @@
 //AJAX FUNCTIONS
 function getShippingInfo() {
-    let session = "";
+    let id = "";
     let name = "session";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
@@ -10,13 +10,18 @@ function getShippingInfo() {
             c = c.substring(1);
         }
         if (c.indexOf(name) == 0) {
-            session = c.substring(name.length, c.length);
+            id = c.substring(name.length + 1, c.length);
         }
     }
 
-    $.get("http://localhost:3004/shipping", session, function (data, status) {
+    $.getJSON("http://localhost:3004/shipping", { session: id }, function (data, status) {
+        console.log(data)
+        let json = "";
+        for (key in data) {
+            json += `${key} : ${data[key]} \n`
+        }
         //console.log(data.cart)
-        alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+        alert("Found Address for Account: \n " + json + "\nStatus: " + status);
 
     }).fail(function () {
         console.log("AJAX shipping retrieval failed")
@@ -30,6 +35,7 @@ function getShippingInfo() {
 //ANGULAR JS
 let shippingApp = angular.module('shippingApp', []);
 shippingApp.controller('shippingController', function ($scope, $controller) {
+    getShippingInfo()
     $scope.showJSON = false
     $scope.displayJSON = function () {
         $scope.shippingJSON = {
@@ -243,13 +249,27 @@ $(document).ready(function () {
             '</div>')
     }
     function shippingJson() {
+        let session = "";
+        let name = "session";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                session = c.substring(name.length + 1, c.length);
+            }
+        }
         let shippingAddress = {
             address: address.val(),
             city: city.val(),
             state: state.val(),
             zip: zip.val(),
             carrier: carrier.val(),
-            method: method.val()
+            method: method.val(),
+            owner: session
         }
         return shippingAddress;
     }
