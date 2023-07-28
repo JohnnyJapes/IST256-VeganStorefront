@@ -55,17 +55,15 @@ $(document).ready(function () {
     let form = $("#returnsForm");
     let city = $("#city");
     let address = $("#address");
-    let state = $("#state");
-    let zip = $("#zipCode");
-    let carrier = $("#carrier");
-    let method = $("#method");
+    let order = $("#orderNum");
+    let desc = $("#description");
 
     //jQuery Listeners
     form.on("submit", submit);
-    city.on("input", validateCity);
-    city.on("focusout", validateCity);
-    address.on("input", validateAddress);
-    address.on("focusout", validateAddress);
+    order.on("input", validateOrderNumber);
+    order.on("focusout", validateOrderNumber);
+    desc.on("input", validateDescription);
+    desc.on("focusout", validateDescription);
 
 
     function submit() {
@@ -84,10 +82,10 @@ $(document).ready(function () {
         var isValid = true;
 
         //validate street address
-        if (!validateAddress()) isValid = false;
+        if (!validateOrderNumber()) isValid = false;
 
         //validate City
-        if (!validateCity()) isValid = false;
+        if (!validateDescription()) isValid = false;
 
 
 
@@ -112,32 +110,27 @@ $(document).ready(function () {
         }
 
     }
-    function validateCity() {
-        if (!city.val()) {
-            addInvalid(city, "Please enter a valid city.")
+    function validateOrderNumber() {
+        if (!order.val()) {
+            addInvalid(order, "Please enter a valid order.")
             return false;
         }
         else {
-            makeValid(city);
+            makeValid(order);
             return true;
         }
 
     }
-    // ZIP validation function
-    function validateZIP() {
-        const regex = new RegExp(/(^\d{5}$)|(^\d{5}-\d{4}$)/);
-        if (!zip.val()) {
-            addInvalid(zip, "Please enter a ZIP code.");
-            return false;
-        }
-        else if (!regex.test(zip.val())) {
-            addInvalid(zip, "Please enter a valid ZIP code.");
+    function validateDescription() {
+        if (!description.val()) {
+            addInvalid(description, "Please enter a valid description.")
             return false;
         }
         else {
-            makeValid(zip);
+            makeValid(description);
             return true;
         }
+
     }
 
 
