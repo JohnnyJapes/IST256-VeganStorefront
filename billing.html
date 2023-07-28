@@ -78,12 +78,6 @@
 
 
 
-
-
-
-
-
-
     <div ng-controller="billingController">
         <div class="container mb-5">
             <div id="alertPlaceholder"></div>
@@ -101,28 +95,29 @@
                             <span class="input-group-text" id="basic-addon1">#</span>
                             <input type="number" class="form-control" id="cardNum" name="cardNum" ng-model='cardNum'
                                 maxlength="16" minlength="16" required>
+                            <div class="invalid-feedback">
+                                Please enter a valid number.
+                            </div>
                         </div>
-                        <div class="invalid-feedback">
-                            Please enter a valid number.
-                        </div>
+
                     </div>
                     <div class="mb-2 col-sm-3">
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon2">CVV</span>
                             <input type="number" class="form-control" id="cvvNum" name="cvvNum" ng-model='cvvNum'
-                                maxlength="3" minlength="3" required>
+                                required>
+                            <div class="invalid-feedback">
+                                Please enter a valid number.
+                            </div>
                         </div>
-                        <div class="invalid-feedback">
-                            Please enter a valid number.
-                        </div>
+
                     </div>
                 </div>
                 <h5 class="py-2">Expiration Date:</h5>
                 <div class="row">
-                    <div class="col-sm-1">
+                    <div class="col-sm-2">
                         <label for="month" class="form-label">Month:</label>
-                        <input type="number" class="form-control" id="month" name="month" min="1" max="12"
-                            ng-model="month">
+                        <input type="number" class="form-control" id="month" name="month" ng-model="month">
                         <div class="invalid-feedback">
                             Please enter a valid month.
                         </div>

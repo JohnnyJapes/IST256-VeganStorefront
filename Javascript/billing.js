@@ -70,8 +70,12 @@ $(document).ready(function () {
     let address = $("#address");
     let state = $("#state");
     let zip = $("#zipCode");
-    let carrier = $("#carrier");
-    let method = $("#method");
+    let cardNum = $("#cardNum");
+    let cvv = $("#cvvNum");
+    let monthIn = $("#month");
+    let yearIn = $("#year");
+    let fNameInput = $("#fName");
+    let lNameInput = $("#lName");
 
     //jQuery Listeners
     form.on("submit", submit);
@@ -83,6 +87,31 @@ $(document).ready(function () {
     state.on("focusout", validateState);
     zip.on("input", validateZIP);
     zip.on("focusout", validateZIP);
+
+    cardNum.on("input", validateCardNum);
+    cardNum.on("focusout", validateCardNum);
+
+    cvv.on("input", validateCvvNum);
+    cvv.on("focusout", validateCvvNum);
+
+    monthIn.on("input", validateMonth);
+    monthIn.on("focusout", validateMonth);
+
+    yearIn.on("input", validateYear);
+    yearIn.on("focusout", validateYear);
+
+    fNameInput.on("focusout", (event) => {
+        validateFirstName();
+    })
+    fNameInput.on("input", (event) => {
+        validateFirstName();
+    })
+    lNameInput.on("focusout", (event) => {
+        validateLastName();
+    })
+    lNameInput.on("input", (event) => {
+        validateLastName();
+    })
 
 
     function submit() {
@@ -117,6 +146,11 @@ $(document).ready(function () {
         if (!validateFirstName()) isValid = false;
 
         if (!validateLastName()) isValid = false;
+        if (!validateCardNum()) isValid = false;
+
+        if (!validateCvvNum()) isValid = false;
+        if (!validateMonth()) isValid = false;
+        if (!validateYear()) isValid = false;
 
 
         return isValid;
@@ -217,6 +251,76 @@ $(document).ready(function () {
         lNameInput.addClass("is-valid");
         return 0;
     }
+    function validateCardNum() {
+        if (!cardNum.val()) {
+            addInvalid(cardNum, 'Please enter a valid card number.');
+            return false;
+        }
+
+        else if (cardNum.val().length != 16) {
+            addInvalid(cardNum, 'Please enter a valid card number.');
+            return false;
+        }
+
+        else {
+            makeValid(cardNum);
+            return true;
+        }
+    }
+    function validateCvvNum() {
+        if (!cvv.val()) {
+            addInvalid(cvv, 'Please enter a valid cvv number.');
+            return false;
+        }
+
+        else if (cvv.val().length != 3) {
+            addInvalid(cvv, 'Please enter a valid cvv number.');
+            return false;
+        }
+
+        else {
+            makeValid(cvv);
+            return true;
+        }
+    }
+
+    function validateMonth() {
+        if (!monthIn.val()) {
+            addInvalid(monthIn, 'Please enter a valid month value.');
+            return false;
+
+        }
+
+        else if (parseInt(monthIn.val()) < 1 || parseInt(monthIn.val()) > 12) {
+            addInvalid(monthIn, 'Please enter a valid month value.');
+            return false;
+        }
+
+        else {
+            console.log(monthIn.val())
+            makeValid(monthIn);
+            return true;
+        }
+    }
+
+    function validateYear() {
+        if (!yearIn.val()) {
+            addInvalid(yearIn, "Please enter a valid year.");
+            return false;
+        }
+
+        else if (yearIn.val().length != 2) {
+            addInvalid(yearIn, "Please enter a valid year.");
+            return false;
+        }
+
+        else {
+            makeValid(yearIn);
+            return true;
+        }
+    }
+
+
 
 
 
