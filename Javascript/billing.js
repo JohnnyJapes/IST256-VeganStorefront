@@ -114,6 +114,10 @@ $(document).ready(function () {
 
         if (!validateZIP()) isValid = false;
 
+        if (!validateFirstName()) isValid = false;
+
+        if (!validateLastName()) isValid = false;
+
 
         return isValid;
     }
@@ -178,6 +182,40 @@ $(document).ready(function () {
             makeValid(state);
             return true;
         }
+    }
+    function validateFirstName() {
+        //regex to check that it is a single word
+        const re = /^[a-zA-z]+$/gm
+        if (!fNameInput.val()) {
+            fNameInput.addClass("is-invalid");
+            $("#fName + .invalid-feedback").text("Please enter a name.")
+            return 1;
+        }
+        if (!re.test(fNameInput.val())) {
+            fNameInput.addClass("is-invalid");
+            $("#fName + .invalid-feedback").text("Please enter a valid name. Name must not contain numbers, special characters, or spaces.")
+            return 1;
+        }
+        fNameInput.removeClass("is-invalid");
+        fNameInput.addClass("is-valid");
+        return 0;
+    }
+    function validateLastName() {
+        //regex to check that it is a single word
+        const re = /^[a-zA-z]+$/gm
+        if (!lNameInput.val()) {
+            lNameInput.addClass("is-invalid");
+            $("#lName + .invalid-feedback").text("Please enter a name.")
+            return 1;
+        }
+        if (!re.test(lNameInput.val())) {
+            lNameInput.addClass("is-invalid");
+            $("#lName + .invalid-feedback").text("Please enter a first and last name. Name must not contain numbers or special characters.")
+            return 1;
+        }
+        lNameInput.removeClass("is-invalid");
+        lNameInput.addClass("is-valid");
+        return 0;
     }
 
 
