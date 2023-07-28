@@ -63,13 +63,27 @@ $(document).ready(function () {
             return;
         }
 
-        jsonUser = data();
+        let jsonUser = data();
 
         let json = "";
         for (key in jsonUser) {
             json += `${key} : ${jsonUser[key]} <br>`
         }
         console.log(json)
+        $.ajax({
+            url: "http://localhost:3004/register",
+            data: JSON.stringify(jsonUser),
+            //dataType: "json",
+            type: "POST",
+            contentType: "application/json",
+            crossDomain: true,
+        })
+            .done(function () { console.log("ajax success") })
+            .fail(function (xhr, status, errorThrown) {
+                console.log("Status: " + status)
+                console.log("Error: " + errorThrown)
+                console.log("xhr: " + xhr)
+            })
         appendAlert("Success! <br> Json Shopper Object: <br>" + json, "success")
 
 
@@ -246,15 +260,15 @@ $(document).ready(function () {
         return 0
     }
     function data() {
-        var data = {
+        return {
             "email": emailInput.val(),
             "password": pw.val(),
             "name": fNameInput.val() + " " + lNameInput.val(),
-            "age": ageInput.val(),
+            "age": parseInt(ageInput.val()),
             "address": addressInput.val(),
             "phone": phoneInput.val()
         }
-        return data;
+
     }
     //pass element and error message
     function addInvalid(element, error) {

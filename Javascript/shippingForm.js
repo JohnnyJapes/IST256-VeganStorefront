@@ -1,3 +1,32 @@
+//AJAX FUNCTIONS
+function getShippingInfo() {
+    let session = "";
+    let name = "session";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            session = c.substring(name.length, c.length);
+        }
+    }
+
+    $.get("http://localhost:3004/shipping", session, function (data, status) {
+        //console.log(data.cart)
+        alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+
+    }).fail(function () {
+        console.log("AJAX shipping retrieval failed")
+    });
+}
+
+
+
+
+
 //ANGULAR JS
 let shippingApp = angular.module('shippingApp', []);
 shippingApp.controller('shippingController', function ($scope, $controller) {
@@ -51,7 +80,7 @@ $(document).ready(function () {
             appendAlert("Some fields are invalid.", "danger");
             return
         }
-
+        updateShipping();
         appendAlert("Successfully Submitted", "success");
     }
     // Form validation function
@@ -169,41 +198,7 @@ $(document).ready(function () {
 
 
 
-    //AJAX FUNCTIONS
-    function getShippingInfo() {
 
-
-        $.get("Placeholder API", function (data, status) {
-            //console.log(data.cart)
-            alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
-            for (let i = 0; i < data.length; i++) {
-                shippingAddress.addItem(data[i])
-            }
-        }).fail(function () {
-            console.log("AJAX shipping retrieval failed")
-        });
-    }
-
-    function updateShipping() {
-        $.post("restfulapi to post to", { shippingAddress }, function (data, status) {
-            alert("Data: " + data + "\nStatus: " + status)
-        }).fail(function () {
-            console.log("AJAX shipping update failed")
-        });;
-
-
-    }
-    function shippingJson() {
-        let shippingAddress = {
-            address: address.val(),
-            city: city.val(),
-            state: state.val(),
-            zip: zip.val(),
-            carrier: carrier.val(),
-            method: method.val()
-        }
-        return shippingAddress;
-    }
 
 
 
@@ -246,6 +241,38 @@ $(document).ready(function () {
             `   <div>${message}</div>` +
             '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
             '</div>')
+    }
+    function shippingJson() {
+        let shippingAddress = {
+            address: address.val(),
+            city: city.val(),
+            state: state.val(),
+            zip: zip.val(),
+            carrier: carrier.val(),
+            method: method.val()
+        }
+        return shippingAddress;
+    }
+    function updateShipping() {
+        // $.post("restfulapi to post to", { shippingJSON() }, function (data, status) {
+        //     alert("Data: " + data + "\nStatus: " + status)
+        // }).fail(function () {
+        //     console.log("AJAX shipping update failed")
+        // });
+        $.ajax({
+            url: "http://localhost:3004/shipping",
+            data: JSON.stringify(shippingJson()),
+            //dataType: "json",
+            type: "POST",
+            contentType: "application/json",
+            crossDomain: true,
+        })
+            .done(function () { console.log("ajax success") })
+            .fail(function (xhr, status, errorThrown) {
+                console.log("Status: " + status)
+                console.log("Error: " + errorThrown)
+                console.log("xhr: " + xhr)
+            })
     }
 })
 
