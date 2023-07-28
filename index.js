@@ -229,3 +229,35 @@ app.post('/billing', async (req, res) => {
         // console.log("Disconnected from MongoDB");
     }
 })
+
+//READ methods
+app.get('/shipping', async (req, res) => {
+    try {
+        console.log('JSON Payload: ', req.query);
+        res.header("Access-Control-Allow-Origin", "*");
+        // Connect to the MongoDB server
+        //await client.connect();
+
+        console.log("Connected to MongoDB");
+
+        // Perform operations on the database
+        const database = client.db();
+        const collection = database.collection("shipping");
+
+        // Example: Insert a document
+        const document = req.body;
+
+        const result = await collection.findOne({ owner: req.query.session });
+        console.log("Found document:", result._id);
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(result)
+    } catch (error) {
+        console.error("Error connecting to MongoDB:", error);
+        res.status(500).send('Insertion Error')
+        // await client.close();
+    } finally {
+        // Close the connection
+        // await client.close();
+        //console.log("Disconnected from MongoDB");
+    }
+})
