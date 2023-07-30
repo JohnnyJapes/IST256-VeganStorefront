@@ -14,7 +14,7 @@ function getbillingInfo() {
         }
     }
 
-    $.getJSON("http://130.203.136.203:3004/billing", { session: id }, function (data, status) {
+    $.getJSON("https://130.203.136.203:3004/billing", { session: id }, function (data, status) {
         console.log(data)
         let json = "";
         for (key in data) {

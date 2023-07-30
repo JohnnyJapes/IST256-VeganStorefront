@@ -206,13 +206,8 @@ $(document).ready(function () {
         return returns;
     }
     function updateReturns() {
-        // $.post("restfulapi to post to", { returnsJSON() }, function (data, status) {
-        //     alert("Data: " + data + "\nStatus: " + status)
-        // }).fail(function () {
-        //     console.log("AJAX returns update failed")
-        // });
         $.ajax({
-            url: "http://localhost:3004/returns",
+            url: "https://130.203.136.203:3004/returns",
             data: JSON.stringify(returnsJson()),
             //dataType: "json",
             type: "POST",

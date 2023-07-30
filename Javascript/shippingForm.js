@@ -14,7 +14,7 @@ function getShippingInfo() {
         }
     }
 
-    $.getJSON("http://130.203.136.203:3004/shipping", { session: id }, function (data, status) {
+    $.getJSON("https://130.203.136.203:3004/shipping", { session: id }, function (data, status) {
         console.log(data)
         let json = "";
         for (key in data) {
@@ -274,13 +274,8 @@ $(document).ready(function () {
         return shippingAddress;
     }
     function updateShipping() {
-        // $.post("restfulapi to post to", { shippingJSON() }, function (data, status) {
-        //     alert("Data: " + data + "\nStatus: " + status)
-        // }).fail(function () {
-        //     console.log("AJAX shipping update failed")
-        // });
         $.ajax({
-            url: "http://localhost:3004/shipping",
+            url: "https://130.203.136.203:3004/shipping",
             data: JSON.stringify(shippingJson()),
             //dataType: "json",
             type: "POST",
