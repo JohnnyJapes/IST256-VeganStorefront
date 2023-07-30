@@ -14,7 +14,7 @@ function getbillingInfo() {
         }
     }
 
-    $.getJSON("https://130.203.136.203:3004/billing", { session: id }, function (data, status) {
+    $.getJSON("https://ist256.up.ist.psu.edu:3004/billing", { session: id }, function (data, status) {
         console.log(data)
         let json = "";
         for (key in data) {
@@ -402,7 +402,7 @@ $(document).ready(function () {
         //     console.log("AJAX billing update failed")
         // });
         $.ajax({
-            url: "http://localhost:3004/billing",
+            url: "https://ist256.up.ist.psu.edu:3004/billing",
             data: JSON.stringify(billingJson()),
             //dataType: "json",
             type: "POST",

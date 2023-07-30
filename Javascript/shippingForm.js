@@ -14,7 +14,7 @@ function getShippingInfo() {
         }
     }
 
-    $.getJSON("https://130.203.136.203:3004/shipping", { session: id }, function (data, status) {
+    $.getJSON("https://ist256.up.ist.psu.edu:3004/shipping", { session: id }, function (data, status) {
         console.log(data)
         let json = "";
         for (key in data) {
@@ -275,7 +275,7 @@ $(document).ready(function () {
     }
     function updateShipping() {
         $.ajax({
-            url: "https://130.203.136.203:3004/shipping",
+            url: "https://ist256.up.ist.psu.edu:3004/shipping",
             data: JSON.stringify(shippingJson()),
             //dataType: "json",
             type: "POST",

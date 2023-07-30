@@ -71,7 +71,7 @@ $(document).ready(function () {
         }
         console.log(json)
         $.ajax({
-            url: "https://130.203.136.203:3004/register",
+            url: "https://ist256.up.ist.psu.edu:3004/register",
             data: JSON.stringify(jsonUser),
             //dataType: "json",
             type: "POST",

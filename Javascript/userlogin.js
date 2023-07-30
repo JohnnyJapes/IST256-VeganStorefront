@@ -39,7 +39,7 @@ $(document).ready(function () {
             Headers: {
                 "Content-Type": "application/json"
             },
-            url: "https://130.203.136.203:3004/login",
+            url: "https://ist256.up.ist.psu.edu:3004/login",
             data: JSON.stringify(jsonUser),
             dataType: "text",
             type: "POST",
