@@ -6,18 +6,7 @@ $(document).ready(function () {
     let name = $("#productName");
 
     //initiate switch logic
-    if (editSwitch.prop("checked") == true) {
-        $("#add").prop("disabled", true);
-        $("#update").prop("disabled", false)
-    }
-    else {
-        $("#add").prop("disabled", false);
-        $("#update").prop("disabled", true)
-    }
-    //listen for further changes
-    editSwitch.on("change", (event) => {
-        console.log("switch")
-        if (editSwitch.prop("checked") == true) {
+    /*     if (editSwitch.prop("checked") == true) {
             $("#add").prop("disabled", true);
             $("#update").prop("disabled", false)
         }
@@ -25,8 +14,19 @@ $(document).ready(function () {
             $("#add").prop("disabled", false);
             $("#update").prop("disabled", true)
         }
-    })
-
+        //listen for further changes
+        editSwitch.on("change", (event) => {
+            console.log("switch")
+            if (editSwitch.prop("checked") == true) {
+                $("#add").prop("disabled", true);
+                $("#update").prop("disabled", false)
+            }
+            else {
+                $("#add").prop("disabled", false);
+                $("#update").prop("disabled", true)
+            }
+        })
+     */
 
     //Other listeners
     productId.addEventListener("focusout", (event) => {
