@@ -1,6 +1,6 @@
 //AJAX FUNCTIONS
 function getbillingInfo() {
-    let id = "";
+    let id = "guest";
     let name = "session";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
@@ -21,7 +21,7 @@ function getbillingInfo() {
             json += `${key} : ${data[key]} \n`
         }
         //console.log(data.cart)
-        alert("Found Address for Account: \n " + json + "\nStatus: " + status);
+        console.log("Found Address for Account: \n " + json + "\nStatus: " + status);
 
     }).fail(function () {
         console.log("AJAX billing retrieval failed")

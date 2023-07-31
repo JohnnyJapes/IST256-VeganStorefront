@@ -53,8 +53,6 @@ returnsApp.controller('returnsController', function ($scope, $controller) {
 
 $(document).ready(function () {
     let form = $("#returnsForm");
-    let city = $("#city");
-    let address = $("#address");
     let order = $("#orderNum");
     let desc = $("#description");
 
@@ -75,7 +73,7 @@ $(document).ready(function () {
             return
         }
         updateReturns();
-        appendAlert("Successfully Submitted", "success");
+
     }
     // Form validation function
     function formValidation() {
@@ -93,23 +91,6 @@ $(document).ready(function () {
     }
     //Individual Validation functions
 
-    function validateAddress() {
-        const re = /^[0-9]+\s[a-zA-Z\s]+$/gm
-        if (!address.val()) {
-            addInvalid(address, "Please enter a valid address.")
-            return false;
-        }
-
-        else if (!re.test(address.val())) {
-            addInvalid(address, "Please enter a valid address with a street name and number.")
-            return false;
-        }
-        else {
-            makeValid(address);
-            return true;
-        }
-
-    }
     function validateOrderNumber() {
         if (!order.val()) {
             addInvalid(order, "Please enter a valid order.")
@@ -171,54 +152,31 @@ $(document).ready(function () {
             '</div>')
     }
     function returnsJson() {
-        let session = "guest";
-        let name = "session";
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                session = c.substring(name.length + 1, c.length);
-            }
-        }
         let returns = {
-            card: {
-                name: $("#fName").val() + " " + $("#lName").val(),
-                number: $("#cardNum").val(),
-                cvv: $("#cvvNum").val(),
-                expiration: {
-                    month: $("#month").val(),
-                    year: $("#year").val()
-                }
-            },
-            returnsAddress: {
-                address: address.val(),
-                city: city.val(),
-                state: state.val(),
-                zip: zip.val(),
-            },
-            owner: session
+            orderNumber: order.val(),
+            description: desc.val()
 
         }
         return returns;
     }
     function updateReturns() {
         $.ajax({
-            url: "https://130.203.136.203:3004/returns",
+            url: "https://ist256.up.ist.psu.edu:3004/returns",
             data: JSON.stringify(returnsJson()),
             //dataType: "json",
             type: "POST",
             contentType: "application/json",
             crossDomain: true,
         })
-            .done(function () { console.log("ajax success") })
+            .done(function () {
+                console.log("ajax success")
+                appendAlert("Successfully Submitted", "success");
+            })
             .fail(function (xhr, status, errorThrown) {
                 console.log("Status: " + status)
                 console.log("Error: " + errorThrown)
                 console.log("xhr: " + xhr)
+                appendAlert("Ajax Failure", "danger")
             })
     }
 })

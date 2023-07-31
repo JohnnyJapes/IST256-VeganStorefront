@@ -1,6 +1,6 @@
 //AJAX FUNCTIONS
 function getShippingInfo() {
-    let id = "";
+    let id = "guest";
     let name = "session";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
@@ -21,7 +21,7 @@ function getShippingInfo() {
             json += `${key} : ${data[key]} \n`
         }
         //console.log(data.cart)
-        alert("Found Address for Account: \n " + json + "\nStatus: " + status);
+        console.log("Found Address for Account: \n " + json + "\nStatus: " + status);
 
     }).fail(function () {
         console.log("AJAX shipping retrieval failed")
@@ -249,7 +249,7 @@ $(document).ready(function () {
             '</div>')
     }
     function shippingJson() {
-        let session = "";
+        let session = "guest";
         let name = "session";
         let decodedCookie = decodeURIComponent(document.cookie);
         let ca = decodedCookie.split(';');

@@ -68,6 +68,20 @@ $(document).ready(function () {
             json += `${key} : ${jsonUser[key]} <br>`
         }
         console.log(json)
+        $.ajax({
+            url: "https://ist256.up.ist.psu.edu:3004/userManagement",
+            data: JSON.stringify(jsonUser),
+            //dataType: "json",
+            type: "POST",
+            contentType: "application/json",
+            crossDomain: true,
+        })
+            .done(function () { console.log("ajax success") })
+            .fail(function (xhr, status, errorThrown) {
+                console.log("Status: " + status)
+                console.log("Error: " + errorThrown)
+                console.log("xhr: " + xhr)
+            })
         appendAlert("Success! <br> Json Shopper Object: <br>" + json, "success")
 
 

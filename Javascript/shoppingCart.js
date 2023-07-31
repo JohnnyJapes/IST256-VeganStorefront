@@ -94,7 +94,7 @@ let products = [];
 // On document ready
 $(document).ready(function () {
     let alertPlaceholder
-    loadCart();
+    // loadCart();
     alertPlaceholder = $("#alertPlaceholder");
     cart.updateCart();
     getProducts();
@@ -120,37 +120,52 @@ $(document).ready(function () {
         cart.addItem(products[index]);
     });
     //load cart from local storage
-    function loadCart() {
-        let cartArr = []
-        try { cartArr = $.parseJSON(localStorage.getItem("cart")) }
-        catch {
-            console.log("empty cart")
-            cartArr = []
-        }
-        if (!cartArr) {
-            cartArr = []
-        }
-        else {
-            for (let i = 0; i < cartArr.length; i++) {
-                cart.addItem(cartArr[i])
-            }
-        }
-    }
+    // function loadCart() {
+    //     let cartArr = []
+    //     try { cartArr = $.parseJSON(localStorage.getItem("cart")) }
+    //     catch {
+    //         console.log("empty cart")
+    //         cartArr = []
+    //     }
+    //     if (!cartArr) {
+    //         cartArr = []
+    //     }
+    //     else {
+    //         for (let i = 0; i < cartArr.length; i++) {
+    //             cart.addItem(cartArr[i])
+    //         }
+    //     }
+    // }
 
     function getCartInfo() {
-
-        $.get("Placeholder API", function (data, status) {
-            console.log(data.product)
-            alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
-            for (let i = 0; i < data.length; i++) {
-                cart.addItem(data[i])
+        let id = "guest";
+        let name = "session";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
             }
-        }).fail(function () {
-            console.log("AJAX cart retrieval failed")
-        });
+            if (c.indexOf(name) == 0) {
+                id = c.substring(name.length + 1, c.length);
+            }
+        }
+        if (id != "guest") {
+
+            $.get("https://ist256.up.ist.psu.edu:3004/cart", { owner: id }, function (data, status) {
+                console.log(data.product)
+                console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+                for (let i = 0; i < data.length; i++) {
+                    cart.addItem(data[i])
+                }
+            }).fail(function () {
+                console.log("AJAX cart retrieval failed")
+            });
+        }
     }
     function getProducts() {
-        $.getJSON("products.json", function (data, status) {
+        $.getJSON("https://ist256.up.ist.psu.edu:3004/product", function (data, status) {
             //alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
             for (let i = 0; i < data.length; i++) {
                 products.push(data[i])
@@ -165,11 +180,39 @@ $(document).ready(function () {
     }
 
     function updateCart() {
-        $.post("restfulapi to post to", { cart }, function (data, status) {
-            alert("Data: " + data + "\nStatus: " + status)
-        }).fail(function () {
-            console.log("AJAX cart update failed")
-        });;
+        let id = "guest";
+        let name = "session";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                id = c.substring(name.length + 1, c.length);
+            }
+        }
+        var cartProducts = JSON.stringify(cart.items);
+        var cart = {
+            cart: cartProducts,
+            owner: session
+        }
+        $.ajax({
+            url: "https://ist256.up.ist.psu.edu:3004/cart",
+            data: JSON.stringify(cart),
+            //dataType: "json",
+            type: "POST",
+            contentType: "application/json",
+            crossDomain: true,
+        })
+            .done(function () { console.log("ajax success") })
+            .fail(function (xhr, status, errorThrown) {
+                console.log("Status: " + status)
+                console.log("Error: " + errorThrown)
+                console.log("xhr: " + xhr)
+            })
+
 
     }
 
@@ -199,18 +242,18 @@ $(document).ready(function () {
 
     }
     function loadProductStorage() {
-        try {
-            productArray = $.parseJSON(localStorage.getItem("productStorage"))
-            for (let i = 0; i < productArray.length; i++) {
-                products.push(productArray[i])
-                $("#productSelect").append(`
-            <option value=${productArray[i].productID}>${productArray[i].productName}</option>`)
-            }
-        }
-        catch {
-            console.log("empty product")
-            productArray = []
-        }
+        // try {
+        //     productArray = $.parseJSON(localStorage.getItem("productStorage"))
+        //     for (let i = 0; i < productArray.length; i++) {
+        //         products.push(productArray[i])
+        //         $("#productSelect").append(`
+        //     <option value=${productArray[i].productID}>${productArray[i].productName}</option>`)
+        //     }
+        // }
+        // catch {
+        //     console.log("empty product")
+        //     productArray = []
+        // }
 
         let item = {
 
