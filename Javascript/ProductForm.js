@@ -63,74 +63,44 @@ $(document).ready(function () {
         if (!formValidation()) {
             return;
         }
+        var product = productJson();
+        var prodJSON = JSON.stringify(product);
+        //update/insert handled server side
+        updateProduct(product);
+        appendAlert("Product Updated/Added Successfully. Product JSON: " + prodJSON, "success");
 
-        //map select inputs
-        let category;
-        let unit;
-        switch (parseInt($("#category").val())) {
-            case 1: category = "Vegetables";
-                break;
-            case 2: category = "Meat Alternative";
-                break;
-            case 3: category = "Merchandise";
-                break;
-        }
-        switch (parseInt($("#unit").val())) {
-            case 1: unit = "Grams";
-                break;
-            case 2: unit = "Kilograms";
-                break;
-            case 3: unit = "Ounces";
-                break;
-            case 4: unit = "Pounds";
-                break;
-            case 5: unit = "Liters";
-                break;
-        }
-        let weight;
-        console.log($('#weight').val())
-        if (!$('#weight').val()) weight = 0;
-        else weight = $('#weight').val();
-
-        var product = {
-            productID: $('#productId').val(),
-            productName: name.val(),
-            description: $('#description').val(),
-            category: category,
-            price: $('#price').val(),
-            weight: weight,
-            unitOfMeasure: unit
-        };
-
-        if (editSwitch.prop("checked") == true) {
-            let index = matchID(product);
-            if (index >= 0) {
-                updateProduct(product, index);
-            }
-            else {
-                appendAlert("Validation Failed: Product ID not found", "danger")
-                return;
-            }
-        }
-        // Create JSON from the product object
-        else if (matchID(product) < 0) {
-            createProduct(product);
-        }
-        else {
-            appendAlert("Product ID is already in use", "danger")
-            return
-        }
-        var productJson = JSON.stringify(product);
-
-        if (product) {
-            // Display the JSON on successful validation
-            if (editSwitch.prop("checked") == true) {
-                appendAlert("Product Updated Successfully. Product JSON: " + productJson, "success");
-            }
-            else
-                appendAlert("Product Added successfully. Product JSON: " + productJson, "success");
-        }
-
+        /* 
+        
+        
+                if (editSwitch.prop("checked") == true) {
+                    let index = matchID(product);
+                    if (index >= 0) {
+        
+                    }
+                    else {
+                        appendAlert("Validation Failed: Product ID not found", "danger")
+                        return;
+                    }
+                }
+                // Create JSON from the product object
+                else if (matchID(product) < 0) {
+                    createProduct(product);
+                }
+                else {
+                    appendAlert("Product ID is already in use", "danger")
+                    return
+                }
+        
+        
+                if (product) {
+                    // Display the JSON on successful validation
+                    if (editSwitch.prop("checked") == true) {
+                        appendAlert("Product Updated/Added Successfully. Product JSON: " + productJson, "success");
+                    }
+                    else
+                        appendAlert("Product Added successfully. Product JSON: " + productJson, "success");
+                }
+         */
     });
 
     // Form validation function
@@ -303,85 +273,145 @@ $(document).ready(function () {
         }
 
     }
+
+    function productJson() {
+        //map select inputs
+        let category;
+        let unit;
+        switch (parseInt($("#category").val())) {
+            case 1: category = "Vegetables";
+                break;
+            case 2: category = "Meat Alternative";
+                break;
+            case 3: category = "Merchandise";
+                break;
+        }
+        switch (parseInt($("#unit").val())) {
+            case 1: unit = "Grams";
+                break;
+            case 2: unit = "Kilograms";
+                break;
+            case 3: unit = "Ounces";
+                break;
+            case 4: unit = "Pounds";
+                break;
+            case 5: unit = "Liters";
+                break;
+        }
+        let weight;
+        console.log($('#weight').val())
+        if (!$('#weight').val()) weight = 0;
+        else weight = $('#weight').val();
+
+        var product = {
+            productID: $('#productId').val(),
+            productName: name.val(),
+            description: $('#description').val(),
+            category: category,
+            price: $('#price').val(),
+            weight: weight,
+            unitOfMeasure: unit
+        };
+        return product;
+    }
     //adds new JSON product to json collection stored in local storage
     //should only be run after matchID() is used to verfiy the productID isn't already in use
     function createProduct(newProduct) {
-        alertPlaceholder.data("productStorage", localStorage.getItem("productStorage"))
-        //console.log(alertPlaceholder.data("productStorage"))
+        /*         alertPlaceholder.data("productStorage", localStorage.getItem("productStorage"))
+                //console.log(alertPlaceholder.data("productStorage"))
+        
+        
+                let jsonArr = [] */
 
-
-        let jsonArr = []
-
-        //code for when a backend exists
-        // $.getJSON("products.json", (data) =>{
-        //     if (data){
-        //         jsonArr = data;
-        //     }
-        // })
-
-        //current alternative
-        try { jsonArr = $.parseJSON(alertPlaceholder.data("productStorage")) }
-        catch {
-            console.log("empty product")
-        }
-
-
-        if (!jsonArr) {
-            //json collection is empty, create array
-            jsonArr = [];
-            jsonArr.push(newProduct)
-            //update localstorage and jQuery object
-            localStorage.setItem("productStorage", JSON.stringify(jsonArr));
-            alertPlaceholder.data("productStorage", JSON.stringify(jsonArr));
-            return
-        }
-        else {
-            jsonArr.push(newProduct)
-            //jQuery code for when a backend exists
-            // $.post("test.json", JSON.stringify(jsonArr), () => {
-            //     appendAlert("Document added", "Success")
-            // });
-
-            //update localstorage and jQuery object
-            localStorage.setItem("productStorage", JSON.stringify(jsonArr));
-            alertPlaceholder.data("productStorage", JSON.stringify(jsonArr));
-            return
-
-
-        }
+        $.ajax({
+            url: "https://ist256.up.ist.psu.edu:3004/product",
+            //dataType: "json",
+            data: newProduct,
+            type: "POST",
+            crossDomain: true,
+        })
+            .done(function (data, status) {
+                console.log("ajax success, status: " + status)
+            })
+            .fail(function (xhr, status, errorThrown) {
+                console.log("Status: " + status)
+                console.log("Error: " + errorThrown)
+                console.log("xhr: " + xhr)
+            })
+        /* 
+                //current alternative
+                try { jsonArr = $.parseJSON(alertPlaceholder.data("productStorage")) }
+                catch {
+                    console.log("empty product")
+                }
+        
+        
+                if (!jsonArr) {
+                    //json collection is empty, create array
+                    jsonArr = [];
+                    jsonArr.push(newProduct)
+                    //update localstorage and jQuery object
+                    localStorage.setItem("productStorage", JSON.stringify(jsonArr));
+                    alertPlaceholder.data("productStorage", JSON.stringify(jsonArr));
+                    return
+                }
+                else {
+                    jsonArr.push(newProduct)
+                    //jQuery code for when a backend exists
+                    // $.post("test.json", JSON.stringify(jsonArr), () => {
+                    //     appendAlert("Document added", "Success")
+                    // });
+        
+                    //update localstorage and jQuery object
+                    localStorage.setItem("productStorage", JSON.stringify(jsonArr));
+                    alertPlaceholder.data("productStorage", JSON.stringify(jsonArr));
+                    return
+        
+        
+                } */
     }
     //pass the product object and the index
-    function updateProduct(product, index) {
-        alertPlaceholder.data("productStorage", localStorage.getItem("productStorage"))
-        console.log(alertPlaceholder.data("productStorage"))
+    function updateProduct(product) {
+        // alertPlaceholder.data("productStorage", localStorage.getItem("productStorage"))
+        // console.log(alertPlaceholder.data("productStorage"))
 
 
         let jsonArr = []
+        $.ajax({
+            url: "https://ist256.up.ist.psu.edu:3004/product",
+            //dataType: "json",
+            data: JSON.stringify(product),
+            contentType: "application/json",
+            type: "POST",
+            crossDomain: true,
+        })
+            .done(function (data, status) {
+                console.log("ajax success, status: " + status)
+            })
+            .fail(function (xhr, status, errorThrown) {
+                console.log("Status: " + status)
+                console.log("Error: " + errorThrown)
+                console.log("xhr: " + xhr)
+            })
 
-        //code for when a backend exists
-        // $.getJSON("products.json", (data) =>{
-        //     if (data){
-        //         jsonArr = data;
-        //     }
-        // })
 
         //current alternative
-        try { jsonArr = $.parseJSON(alertPlaceholder.data("productStorage")) }
-        catch {
-            console.log("empty product")
-        }
-        if (jsonArr[index].productID == product.productID) {
-            jsonArr[index] = product;
-        }
-
-        //jQuery code for when a backend exists
-        // $.post("test.json", JSON.stringify(jsonArr), () => {
-        //     appendAlert("Document added", "Success")
-        // });
-
-        //update localstorage and jQuery object
-        localStorage.setItem("productStorage", JSON.stringify(jsonArr));
-        alertPlaceholder.data("productStorage", JSON.stringify(jsonArr));
+        /*        try { jsonArr = $.parseJSON(alertPlaceholder.data("productStorage")) }
+               catch {
+                   console.log("empty product")
+               }
+               if (jsonArr[index].productID == product.productID) {
+                   jsonArr[index] = product;
+               }
+       
+               //jQuery code for when a backend exists
+               // $.post("test.json", JSON.stringify(jsonArr), () => {
+               //     appendAlert("Document added", "Success")
+               // });
+       
+               //update localstorage and jQuery object
+               localStorage.setItem("productStorage", JSON.stringify(jsonArr));
+               alertPlaceholder.data("productStorage", JSON.stringify(jsonArr)); */
         return
 
 
