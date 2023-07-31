@@ -159,12 +159,12 @@ $(document).ready(function () {
     }
     function validateWeight() {
         // Validate weight
-        var weight = $('#weight').val();
-        if (!weight) {
+        var weight = $('#weight')
+        if (!weight.val()) {
             makeValid(weight);
             return true
         }
-        if (isNaN(weight) || weight <= 0) {
+        if (isNaN(weight.val()) || weight.val() <= 0) {
             addInvalid(weight, "Weight should be a positive number");
             return false;
         }

@@ -13,19 +13,20 @@ function getShippingInfo() {
             id = c.substring(name.length + 1, c.length);
         }
     }
+    if (id != 'guest') {
+        $.getJSON("https://ist256.up.ist.psu.edu:3004/shipping", { session: id }, function (data, status) {
+            console.log(data)
+            let json = "";
+            for (key in data) {
+                json += `${key} : ${data[key]} \n`
+            }
+            //console.log(data.cart)
+            console.log("Found Address for Account: \n " + json + "\nStatus: " + status);
 
-    $.getJSON("https://ist256.up.ist.psu.edu:3004/shipping", { session: id }, function (data, status) {
-        console.log(data)
-        let json = "";
-        for (key in data) {
-            json += `${key} : ${data[key]} \n`
-        }
-        //console.log(data.cart)
-        console.log("Found Address for Account: \n " + json + "\nStatus: " + status);
-
-    }).fail(function () {
-        console.log("AJAX shipping retrieval failed")
-    });
+        }).fail(function () {
+            console.log("AJAX shipping retrieval failed")
+        });
+    }
 }
 
 

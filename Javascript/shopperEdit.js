@@ -205,7 +205,7 @@ $(document).ready(function () {
         var data = {
             "email": emailInput.val(),
             "name": fNameInput.val() + " " + lNameInput.val(),
-            "age": ageInput.val(),
+            "age": parseInt(ageInput.val()),
             "address": addressInput.val(),
             "phone": phoneInput.val()
         }

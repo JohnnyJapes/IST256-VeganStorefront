@@ -1,46 +1,12 @@
-//AJAX FUNCTIONS
-function getReturnsInfo() {
-    let id = "";
-    let name = "session";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            id = c.substring(name.length + 1, c.length);
-        }
-    }
-
-    $.getJSON("http://130.203.136.203:3004/returns", { session: id }, function (data, status) {
-        console.log(data)
-        let json = "";
-        for (key in data) {
-            json += `${key} : ${data[key]} \n`
-        }
-        //console.log(data.cart)
-        alert("Found Address for Account: \n " + json + "\nStatus: " + status);
-
-    }).fail(function () {
-        console.log("AJAX returns retrieval failed")
-    });
-}
-
-
-
-
 
 //ANGULAR JS
 let returnsApp = angular.module('returnsApp', []);
 returnsApp.controller('returnsController', function ($scope, $controller) {
-    getReturnsInfo()
     $scope.showJSON = false
     $scope.displayJSON = function () {
         $scope.returnsJSON = {
             order: $scope.orderNum,
-            description: $scope.description
+            descriptionription: $scope.description
         }
         console.log('angular')
         console.log($scope.returnsJSON)
@@ -54,14 +20,14 @@ returnsApp.controller('returnsController', function ($scope, $controller) {
 $(document).ready(function () {
     let form = $("#returnsForm");
     let order = $("#orderNum");
-    let desc = $("#description");
+    let description = $("#description");
 
     //jQuery Listeners
     form.on("submit", submit);
     order.on("input", validateOrderNumber);
     order.on("focusout", validateOrderNumber);
-    desc.on("input", validateDescription);
-    desc.on("focusout", validateDescription);
+    description.on("input", validateDescription);
+    description.on("focusout", validateDescription);
 
 
     function submit() {
@@ -104,7 +70,7 @@ $(document).ready(function () {
     }
     function validateDescription() {
         if (!description.val()) {
-            addInvalid(description, "Please enter a valid description.")
+            addInvalid(description, "Please enter a valid descriptionription.")
             return false;
         }
         else {
@@ -154,7 +120,7 @@ $(document).ready(function () {
     function returnsJson() {
         let returns = {
             orderNumber: order.val(),
-            description: desc.val()
+            descriptionription: description.val()
 
         }
         return returns;

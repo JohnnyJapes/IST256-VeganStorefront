@@ -13,19 +13,20 @@ function getbillingInfo() {
             id = c.substring(name.length + 1, c.length);
         }
     }
+    if (id != 'guest') {
+        $.getJSON("https://ist256.up.ist.psu.edu:3004/billing", { session: id }, function (data, status) {
+            console.log(data)
+            let json = "";
+            for (key in data) {
+                json += `${key} : ${data[key]} \n`
+            }
+            //console.log(data.cart)
+            console.log("Found Address for Account: \n " + json + "\nStatus: " + status);
 
-    $.getJSON("https://ist256.up.ist.psu.edu:3004/billing", { session: id }, function (data, status) {
-        console.log(data)
-        let json = "";
-        for (key in data) {
-            json += `${key} : ${data[key]} \n`
-        }
-        //console.log(data.cart)
-        console.log("Found Address for Account: \n " + json + "\nStatus: " + status);
-
-    }).fail(function () {
-        console.log("AJAX billing retrieval failed")
-    });
+        }).fail(function () {
+            console.log("AJAX billing retrieval failed")
+        });
+    }
 }
 
 
@@ -223,16 +224,16 @@ $(document).ready(function () {
         if (!fNameInput.val()) {
             fNameInput.addClass("is-invalid");
             $("#fName + .invalid-feedback").text("Please enter a name.")
-            return 1;
+            return false;
         }
         if (!re.test(fNameInput.val())) {
             fNameInput.addClass("is-invalid");
             $("#fName + .invalid-feedback").text("Please enter a valid name. Name must not contain numbers, special characters, or spaces.")
-            return 1;
+            return false;
         }
         fNameInput.removeClass("is-invalid");
         fNameInput.addClass("is-valid");
-        return 0;
+        return true;
     }
     function validateLastName() {
         //regex to check that it is a single word
@@ -240,16 +241,16 @@ $(document).ready(function () {
         if (!lNameInput.val()) {
             lNameInput.addClass("is-invalid");
             $("#lName + .invalid-feedback").text("Please enter a name.")
-            return 1;
+            return false;
         }
         if (!re.test(lNameInput.val())) {
             lNameInput.addClass("is-invalid");
             $("#lName + .invalid-feedback").text("Please enter a first and last name. Name must not contain numbers or special characters.")
-            return 1;
+            return false;
         }
         lNameInput.removeClass("is-invalid");
         lNameInput.addClass("is-valid");
-        return 0;
+        return true;
     }
     function validateCardNum() {
         if (!cardNum.val()) {

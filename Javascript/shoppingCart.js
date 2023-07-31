@@ -167,7 +167,10 @@ $(document).ready(function () {
     function getProducts() {
         $.getJSON("https://ist256.up.ist.psu.edu:3004/product", function (data, status) {
             //alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+            console.log("start product fetch ajax")
+            console.log(data)
             for (let i = 0; i < data.length; i++) {
+                console.log(data[i])
                 products.push(data[i])
                 $("#productSelect").append(`
                 <option value=${data[i].productID}>${data[i].productName}</option>`)
@@ -194,13 +197,13 @@ $(document).ready(function () {
             }
         }
         var cartProducts = JSON.stringify(cart.items);
-        var cart = {
+        var cartJson = {
             cart: cartProducts,
-            owner: session
+            owner: id
         }
         $.ajax({
             url: "https://ist256.up.ist.psu.edu:3004/cart",
-            data: JSON.stringify(cart),
+            data: JSON.stringify(cartJson),
             //dataType: "json",
             type: "POST",
             contentType: "application/json",
