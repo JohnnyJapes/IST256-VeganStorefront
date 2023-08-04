@@ -397,11 +397,6 @@ $(document).ready(function () {
         return billing;
     }
     function updatebilling() {
-        // $.post("restfulapi to post to", { billingJSON() }, function (data, status) {
-        //     alert("Data: " + data + "\nStatus: " + status)
-        // }).fail(function () {
-        //     console.log("AJAX billing update failed")
-        // });
         $.ajax({
             url: "https://ist256.up.ist.psu.edu:3004/billing",
             data: JSON.stringify(billingJson()),
