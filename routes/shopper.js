@@ -8,6 +8,7 @@ const app = express()
 
 let dbName = "team4"
 const uri = "mongodb://team4:dbteam4_8X9@localhost:27017/team4"; // Replace with your MongoDB URI
+const client = new MongoClient(uri);
 
 //create
 router.post('/register', async (req, res) => {
@@ -19,7 +20,7 @@ router.post('/register', async (req, res) => {
 
 
         // Create a new MongoClient
-        const client = new MongoClient(uri);
+
         await client.connect();
         console.log("Connected to MongoDB");
 
@@ -41,7 +42,7 @@ router.post('/register', async (req, res) => {
     } finally {
         // Close the connection
         await client.close();
-        //console.log("Disconnected from MongoDB");
+        console.log("Disconnected from MongoDB");
     }
 })
 // app.post('/register', async (req, res) => {

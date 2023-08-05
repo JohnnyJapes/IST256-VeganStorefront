@@ -8,6 +8,7 @@ const app = express()
 
 let dbName = "team4"
 const uri = "mongodb://team4:dbteam4_8X9@localhost:27017/team4"; // Replace with your MongoDB URI
+const client = new MongoClient(uri);
 //code goes here, replace app with router
 //so router.post, router.get, etc.
 
@@ -17,8 +18,8 @@ router.post('/returns', async (req, res) => {
         console.log('JSON Payload: ' + req.body);
         res.header("Access-Control-Allow-Origin", "*");
         // Connect to the MongoDB server
-        // keeping one connection open for node server duration(look above)
-        //await client.connect();
+        await client.connect();
+        console.log("Connected to MongoDB");
 
 
         console.log("Connected to MongoDB");
@@ -41,6 +42,10 @@ router.post('/returns', async (req, res) => {
         res.status(500).send('Insertion Error')
 
 
+    } finally {
+        // Close the connection
+        await client.close();
+        console.log("Disconnected from MongoDB");
     }
 })
 

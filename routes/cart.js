@@ -8,6 +8,7 @@ const app = express()
 
 let dbName = "team4"
 const uri = "mongodb://team4:dbteam4_8X9@localhost:27017/team4";
+const client = new MongoClient(uri);
 //code goes here, replace app with router
 //so router.post, router.get, etc.
 
@@ -18,7 +19,6 @@ router.post('/cart', async (req, res) => {
         res.header("Access-Control-Allow-Origin", "*");
         // Connect to the MongoDB server
 
-        const client = new MongoClient(uri);
         await client.connect();
         console.log("Connected to MongoDB");
 
