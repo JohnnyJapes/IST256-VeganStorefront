@@ -8,6 +8,10 @@ const create = require('./routes/create.js')
 var bodyParser = require('body-parser')
 const MongoStore = require('connect-mongo')
 var cors = require("cors")
+const shopper = require('./routes/shopper.js');
+const product = require('./routes/product.js');
+const returns = require('./routes/returns.js');
+const cart = require('./routes/cart.js');
 
 
 const app = express()
@@ -98,7 +102,10 @@ async function connectToMongoDB() {
 
 //connectToMongoDB();
 
-app.use(create);
+app.use(shopper);
+app.use(product);
+app.use(cart);
+app.use(returns);
 
 
 // app.get('/', (req, res) => {
@@ -139,36 +146,6 @@ app.post('/login', async (req, res) => {
 })
 //Create Methods
 
-app.post('/register', async (req, res) => {
-    try {
-        console.log('JSON Payload: ', req.body);
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        //res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, content-type");
-        // Connect to the MongoDB server
-        //await client.connect();
-
-        console.log("Connected to MongoDB");
-
-        // Perform operations on the database
-        const database = client.db(dbName);
-        const collection = database.collection("shoppers");
-
-        // Example: Insert a document
-        const document = req.body;
-
-        const result = await collection.insertOne(document);
-        console.log("Inserted document:", result.insertedId);
-        res.status(200).send("Insertion Successful")
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-        res.status(500).send('Insertion Error')
-        // await client.close();
-    } finally {
-        // Close the connection
-        // await client.close();
-        //console.log("Disconnected from MongoDB");
-    }
-})
 //Create Shipping Address
 // app.post('/shipping', async (req, res) => {
 //     try {
@@ -226,107 +203,9 @@ app.post('/billing', async (req, res) => {
         // console.log("Disconnected from MongoDB");
     }
 })
-app.post('/product', async (req, res) => {
-    try {
-        console.log('JSON Payload: ' + req.body);
-        res.header("Access-Control-Allow-Origin", "*");
-        // Connect to the MongoDB server
-        // keeping one connection open for node server duration(look above)
-        //await client.connect();
-
-        // Perform operations on the database
-        const database = client.db(dbName);
-        const collection = database.collection("products");
 
 
-        // Example: Insert a document
-        const document = {
-            $set: req.body
-        };
 
-        const filter = { productID: document.productID }
-        const options = { upsert: true }
-        //update document, otherwise insert new
-        const result = await collection.updateOne(filter, document, options)
-        console.log("Inserted document:", result.insertedId);
-        console.log(
-            `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,
-        );
-        res.status(200).send("Insertion Successful")
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-        res.status(500).send('Insertion Error')
-
-
-    }
-})
-app.post('/cart', async (req, res) => {
-    try {
-        console.log('JSON Payload: ' + req.body);
-        res.header("Access-Control-Allow-Origin", "*");
-        // Connect to the MongoDB server
-        // keeping one connection open for node server duration(look above)
-        //await client.connect();
-
-
-        console.log("Connected to MongoDB");
-
-
-        // Perform operations on the database
-        const database = client.db(dbName);
-        const collection = database.collection("carts");
-
-
-        // Example: Insert a document
-        const document = {
-            $set: req.body
-        };
-
-        const filter = { owner: document.owner }
-        const options = { upsert: true }
-        //update document, otherwise insert new
-        const result = await collection.updateOne(filter, document, options)
-        console.log("Inserted document:", result.insertedId);
-        res.status(200).send("Insertion Successful")
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-        res.status(500).send('Insertion Error')
-
-
-    }
-})
-
-app.post('/returns', async (req, res) => {
-    try {
-        console.log('JSON Payload: ' + req.body);
-        res.header("Access-Control-Allow-Origin", "*");
-        // Connect to the MongoDB server
-        // keeping one connection open for node server duration(look above)
-        //await client.connect();
-
-
-        console.log("Connected to MongoDB");
-
-
-        // Perform operations on the database
-        const database = client.db(dbName);
-        const collection = database.collection("returns");
-
-
-        // Example: Insert a document
-        const document = req.body;
-
-
-        const result = await collection.insertOne(document);
-        console.log("Inserted document:", result.insertedId);
-        res.status(200).send("Insertion Successful")
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-        res.status(500).send('Insertion Error')
-
-
-    }
-})
 
 
 //READ methods
