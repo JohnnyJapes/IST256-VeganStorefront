@@ -269,37 +269,7 @@ app.get('/billing', async (req, res) => {
         //console.log("Disconnected from MongoDB");
     }
 })
-app.get('/product', async (req, res) => {
-    try {
-        //console.log('JSON Payload: ' + req.body);
-        res.header("Access-Control-Allow-Origin", "*");
-        // Connect to the MongoDB server
-        // keeping one connection open for node server duration(look above)
-        //await client.connect();
 
-
-        console.log("Get products");
-
-
-        // Perform operations on the database
-        const database = client.db(dbName);
-        const collection = database.collection("products");
-
-
-        // Example: Insert a document
-        const document = req.body;
-        //update document, otherwise insert new
-        const result = await collection.find().limit(10)
-        productArray = await result.toArray();
-        console.log("Retrived Documents", productArray[0]);
-        res.status(200).send(productArray)
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-        res.status(500).send('Insertion Error')
-
-
-    }
-})
 app.get('/cart', async (req, res) => {
     try {
         console.log('JSON Payload: ' + req.body);
@@ -320,7 +290,7 @@ app.get('/cart', async (req, res) => {
         const result = await collection.findOne({ owner: req.query.owner });
         console.log("Found document:", result._id);
         res.setHeader('Content-Type', 'application/json');
-        res.status(200).send(productArray)
+        res.status(200).send(result)
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
         res.status(500).send('Insertion Error')

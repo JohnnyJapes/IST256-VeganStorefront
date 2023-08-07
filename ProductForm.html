@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html ng-app="productApp">
 
 
 <head>
@@ -15,7 +15,9 @@
     <link rel="stylesheet" href="CSS/ProductForm.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.js" crossorigin="anonymous"></script>
     <script src="Javascript/ProductForm.js"></script>
+
 
 </head>
 
@@ -72,96 +74,115 @@
 
 
 
+    <div ng-controller="productController">
+        <div class="container mb-5">
+            <div id="alertPlaceholder"></div>
+            <h1>Product Management</h1>
 
-    <div class="container mb-5">
-        <div id="alertPlaceholder"></div>
-        <h1>Product Management</h1>
 
-
-        <!-- Bootstrap Form with validation-->
-        <form action="send to location here" id="productForm" class="needs-validation" novalidate>
-            <!-- <div class="form-check form-switch">
+            <!-- Bootstrap Form with validation-->
+            <form action="send to location here" id="productForm" class="needs-validation" novalidate>
+                <!-- <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" id="AESwitcher">
                 <label class="form-check-label" for="AESwitcher">Add/Edit</label>
             </div> -->
-            <div class="mb-2">
-                <label for="productId" class="form-label">Product ID:</label>
-                <input type="number" class="form-control" id="productId" name="productId" required>
-                <div class="invalid-feedback">
-                    Please enter a valid id.
-                </div>
-            </div>
-            <div class="mb-2">
-                <label for="productName" class="form-label">Product Name:</label>
-                <input type="text" class="form-control" id="productName" name="productName" required>
-                <div class="invalid-feedback">
-                    Please enter a valid Name.
-                </div>
-            </div>
-            <div class="mb-2">
-                <label for="exampleFormControlTextarea1">Product Description:</label>
-                <textarea class="form-control" id="description" rows="3" required
-                    placeholder="Enter Product Description"></textarea>
-                <div class="invalid-feedback">
-                    Please enter a valid Description.
-                </div>
-            </div>
+                <div class="mb-2 row">
+                    <label for="productId" class="form-label">Product ID:</label>
+                    <div class="col-10">
 
-            <div class="mb-2">
-                <label for="category">Category:</label>
-                <select class="form-control" id="category" required>
-                    <option selected>Select a Category</option>
-                    <option value="1">Vegetables</option>
-                    <option value="2">Meat Alternative</option>
-                    <option value="3">Merchandise?</option>
-                </select>
-                <div class="invalid-feedback">
-                    Please enter select a category
-                </div>
-            </div>
-            <div class="mb-2">
-                <label for="price" class="form-label">Price:</label>
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control" id="price" name="price" min="0" value="0" step="0.01">
-                    <div class="invalid-feedback">
-                        Please enter a valid price.
+                        <input type="number" class="form-control" id="productId" name="productId" ng-model='productID'
+                            required>
+                        <div class="invalid-feedback">
+                            Please enter a valid id.
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-primary" id="find" ng-click="getProduct()">Find
+                            Product</button>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-6">
-                    <label for="weight" class="form-label">Weight (Optional):</label>
-                    <input type="number" class="form-control" id="weight" name="weight" min="0" value="0" step="0.01">
+                <div class="mb-2">
+                    <label for="productName" class="form-label">Product Name:</label>
+                    <input type="text" class="form-control" id="productName" name="productName" ng-model='name'
+                        required>
                     <div class="invalid-feedback">
-                        Please enter a valid weight.
+                        Please enter a valid Name.
                     </div>
                 </div>
-                <div class="col-6">
-                    <label for="unit" class="form-label">Unit:</label>
-                    <select class="form-control" id="unit" required>
-                        <option selected>Select a unit</option>
-                        <option value="1">Grams</option>
-                        <option value="2">Kilograms</option>
-                        <option value="3">Ounces</option>
-                        <option value="4">Pounds</option>
-                        <option value="5">Liters</option>
+                <div class="mb-2">
+                    <label for="exampleFormControlTextarea1">Product Description:</label>
+                    <textarea class="form-control" id="description" rows="3" ng-model='description' required
+                        placeholder="Enter Product Description"></textarea>
+                    <div class="invalid-feedback">
+                        Please enter a valid Description.
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <label for="category">Category:</label>
+                    <select class="form-control" id="category" ng-model='category' required>
+                        <option selected value="">Select a Category</option>
+                        <option>Vegetables</option>
+                        <option>Meat Alternative</option>
+                        <option>Merchandise</option>
                     </select>
                     <div class="invalid-feedback">
-                        Please enter select a unit.
+                        Please enter select a category
                     </div>
                 </div>
+                <div class="mb-2">
+                    <label for="price" class="form-label">Price:</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" class="form-control" id="price" name="price" min="0" value="0" step="0.01"
+                            ng-model='price'>
+                        <div class="invalid-feedback">
+                            Please enter a valid price.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label for="weight" class="form-label">Weight (Optional):</label>
+                        <input type="number" class="form-control" id="weight" name="weight" min="0" value="0"
+                            step="0.01" ng-model='weight'>
+                        <div class="invalid-feedback">
+                            Please enter a valid weight.
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="unit" class="form-label">Unit:</label>
+                        <select class="form-control" id="unit" ng-model='unit' required>
+                            <option selected value="">Select a unit</option>
+                            <option>Grams</option>
+                            <option>Kilograms</option>
+                            <option>Ounces</option>
+                            <option>Pounds</option>
+                            <option>Liters</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Please enter select a unit.
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <!-- Bootstrap Button -->
+                <button type="button" class="btn btn-primary" id="add">Create</button>
+                <button type="button" class="btn btn-primary" id="update" disabled>Update</button>
+                <button type="button" class="btn btn-danger" id="delete" ng-click="deleteProduct()"
+                    disabled>Delete</button>
+
+            </form>
+
+            <div class="mb-2 px-2 py-2" id="productJSON" ng-show="showJSON">
+                <h2>Product JSON:</h2>
+                <p>{{productJSON | json}}</p>
             </div>
-            <br>
-            <!-- Bootstrap Button -->
-            <button type="submit" class="btn btn-primary" id="add">Update/Add</button>
-            <!-- <button type="submit" class="btn btn-primary" id="update" disabled>Update</button> -->
-        </form>
+        </div>
+
+
     </div>
-
-
-
 
     <footer
         class="position-absolute bottom-0 start-50 translate-middle-x text-bg-light text-center container-fluid mt-3">

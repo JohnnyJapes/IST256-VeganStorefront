@@ -1,9 +1,80 @@
+//ANGULAR JS
+let productApp = angular.module('productApp', []);
+productApp.controller('productController', function ($scope, $controller) {
+    $scope.showJSON = false
+    $scope.displayJSON = function () {
+        $scope.productJSON = {
+            productID: $scope.productID,
+            productName: $scope.productName,
+            description: $scope.description,
+            category: $scope.category,
+            price: $scope.price,
+            weight: $scope.weight,
+            unitOfMeasure: $scope.unit
+        }
+        console.log('angular')
+        console.log($scope.productJSON)
+        for (key in $scope.productJSON) {
+            if ($scope.productJSON[key]) $scope.showJSON = true
+        };
+    }
+    $scope.getProduct = function () {
+        $.getJSON("https://ist256.up.ist.psu.edu:3004/product/read", { productID: $scope.productID }, function (data, status) {
+            console.log(data)
+            let json = "";
+            for (key in data) {
+                json += `${key} : ${data[key]} \n`
+            }
+            //console.log(data.cart)
+            console.log("Found product: \n " + json + "\nStatus: " + status);
+            $scope.productID = data.productID;
+            $scope.productName = data.productName;
+            $scope.description = data.description;
+            $scope.category = data.category;
+            $scope.price = data.price;
+            $scope.weight = data.weight;
+            $scope.unit = data.unitOfMeasure;
+            $("#add").prop("disabled", true);
+            $("#update").prop("disabled", false)
+            $("#delete").prop("disabled", false)
+            $scope.apply()
+
+        }).fail(function () {
+            console.log("AJAX product retrieval failed")
+        });
+
+    }
+    $scope.deleteProduct = function () {
+        $.ajax({
+            url: "https://ist256.up.ist.psu.edu:3004/product/delete",
+            //dataType: "json",
+            data: { productID: $scope.productID },
+            type: "GET",
+            crossDomain: true,
+        })
+            .done(function (data) {
+                console.log("Product Deleted: " + data)
+            })
+            .fail(function (xhr, status, errorThrown) {
+                console.log("ajax product deletion failed")
+                console.log("Status: " + status)
+                console.log("Error: " + errorThrown)
+                console.log("xhr: " + xhr)
+
+            })
+    }
+
+})
+function getProduct(ID) {
+
+}
 $(document).ready(function () {
+
     let alertPlaceholder = $("#alertPlaceholder");
     let editSwitch = $("#AESwitcher");
-    let productId = document.getElementById("productId");
-    let description = document.getElementById("description");
-    let name = $("#productName");
+    let productId = $('#productId');
+    let description = $("#description");
+    let productName = $("#productName");
 
     //initiate switch logic
     /*     if (editSwitch.prop("checked") == true) {
@@ -29,16 +100,16 @@ $(document).ready(function () {
      */
 
     //Other listeners
-    productId.addEventListener("focusout", (event) => {
+    productId.on("focusout", (event) => {
         productIdCheck();
     })
-    productId.addEventListener("input", (event) => {
+    productId.on("input", (event) => {
         productIdCheck();
     })
-    description.addEventListener("focusout", (event) => {
+    description.on("focusout", (event) => {
         descriptionCheck();
     })
-    description.addEventListener("input", (event) => {
+    description.on("input", (event) => {
         descriptionCheck();
     })
     $('#category').on("change", (event) => validateCategory());
@@ -47,14 +118,29 @@ $(document).ready(function () {
     $('#weight').on("focusout", (event) => validateWeight());
     $('#weight').on("input", (event) => validateWeight());
     $('#unit').on("change", (event) => validateUnit());
-    name.on("input", (event) => validateName());
-    name.on("focusout", (event) => validateName());
+    productName.on("input", (event) => validateName());
+    productName.on("focusout", (event) => validateName());
 
 
 
+    $('#add').on("click", function (event) {
+        // Prevent default form submission
+        console.log('submit event')
+        event.preventDefault();
+
+        // Perform form validation
+        if (!formValidation()) {
+            return;
+        }
+        var product = productJson();
+        var prodJSON = JSON.stringify(product);
+        //update/insert handled server side
+        createProduct(product);
 
 
-    $('#productForm').submit(function (event) {
+    });
+
+    $('#update').on("click", function (event) {
         // Prevent default form submission
         console.log('submit event')
         event.preventDefault();
@@ -125,7 +211,7 @@ $(document).ready(function () {
         // Validate unit
         if (!validateUnit()) isValid = false;
 
-        //validate name
+        //validate productName
         if (!validateName()) isValid = false;
 
         return isValid;
@@ -134,8 +220,8 @@ $(document).ready(function () {
 
     function validateCategory() {
         let category = $('#category');
-        const set = new Set([1, 2, 3])
-        if (!set.has(parseInt(category.val()))) {
+        const set = new Set(["Vegetables", "Meat Alternative", "Merchandise"])
+        if (!set.has(category.val())) {
             console.log(category.val())
             addInvalid(category, "Please Select a Category");
             return false;
@@ -176,8 +262,8 @@ $(document).ready(function () {
 
     function validateUnit() {
         let unit = $('#unit');
-        const set = new Set([1, 2, 3, 4, 5])
-        if (!set.has(parseInt(unit.val()))) {
+        const set = new Set(["Grams", "Kilograms", "Ounces", "Pounds", "Liters"])
+        if (!set.has(unit.val())) {
             console.log(unit.val())
             addInvalid(unit, "Please Select a Unit of measurement");
             return false;
@@ -190,7 +276,7 @@ $(document).ready(function () {
 
 
     function productIdCheck() {
-        if (!productId.value) {
+        if (!productId.val()) {
             addInvalid(productId, "Please enter a valid id");
             return false;
         } else {
@@ -202,7 +288,7 @@ $(document).ready(function () {
 
 
     function descriptionCheck() {
-        if (!description.value) {
+        if (!description.val()) {
             addInvalid(description, "Please enter a valid product description");
             return false;
         } else {
@@ -212,12 +298,12 @@ $(document).ready(function () {
     }
 
     function validateName() {
-        if (!name.val()) {
-            addInvalid(name, "Please enter a Product Name.")
+        if (!productName.val()) {
+            addInvalid(productName, "Please enter a Product Name.")
             return false;
         }
         else {
-            makeValid(name);
+            makeValid(productName);
             return true;
         }
 
@@ -276,28 +362,28 @@ $(document).ready(function () {
 
     function productJson() {
         //map select inputs
-        let category;
-        let unit;
-        switch (parseInt($("#category").val())) {
-            case 1: category = "Vegetables";
-                break;
-            case 2: category = "Meat Alternative";
-                break;
-            case 3: category = "Merchandise";
-                break;
-        }
-        switch (parseInt($("#unit").val())) {
-            case 1: unit = "Grams";
-                break;
-            case 2: unit = "Kilograms";
-                break;
-            case 3: unit = "Ounces";
-                break;
-            case 4: unit = "Pounds";
-                break;
-            case 5: unit = "Liters";
-                break;
-        }
+        // let category;
+        // let unit;
+        // switch (parseInt($("#category").val())) {
+        //     case 1: category = "Vegetables";
+        //         break;
+        //     case 2: category = "Meat Alternative";
+        //         break;
+        //     case 3: category = "Merchandise";
+        //         break;
+        // }
+        // switch (parseInt($("#unit").val())) {
+        //     case 1: unit = "Grams";
+        //         break;
+        //     case 2: unit = "Kilograms";
+        //         break;
+        //     case 3: unit = "Ounces";
+        //         break;
+        //     case 4: unit = "Pounds";
+        //         break;
+        //     case 5: unit = "Liters";
+        //         break;
+        // }
         let weight;
         console.log($('#weight').val())
         if (!$('#weight').val()) weight = 0;
@@ -305,18 +391,18 @@ $(document).ready(function () {
 
         var product = {
             productID: $('#productId').val(),
-            productName: name.val(),
+            productName: productName.val(),
             description: $('#description').val(),
-            category: category,
+            category: $("#category").val(),
             price: $('#price').val(),
             weight: weight,
-            unitOfMeasure: unit
+            unitOfMeasure: $("#unit").val()
         };
         return product;
     }
     //adds new JSON product to json collection stored in local storage
     //should only be run after matchID() is used to verfiy the productID isn't already in use
-    function createProduct(newProduct) {
+    function createProduct(product) {
         /*         alertPlaceholder.data("productStorage", localStorage.getItem("productStorage"))
                 //console.log(alertPlaceholder.data("productStorage"))
         
@@ -324,20 +410,24 @@ $(document).ready(function () {
                 let jsonArr = [] */
 
         $.ajax({
-            url: "https://ist256.up.ist.psu.edu:3004/product",
+            url: "https://ist256.up.ist.psu.edu:3004/product/create",
             //dataType: "json",
-            data: newProduct,
+            data: JSON.stringify(product),
+            contentType: "application/json",
             type: "POST",
             crossDomain: true,
         })
             .done(function (data, status) {
                 console.log("ajax success, status: " + status)
+                appendAlert("Product Created Successfully. Product JSON: " + JSON.stringify(product), "success");
             })
             .fail(function (xhr, status, errorThrown) {
                 console.log("Status: " + status)
                 console.log("Error: " + errorThrown)
                 console.log("xhr: " + xhr)
+                appendAlert("Product Creation Unsuccessful.", "danger");
             })
+
         /* 
                 //current alternative
                 try { jsonArr = $.parseJSON(alertPlaceholder.data("productStorage")) }
@@ -378,7 +468,7 @@ $(document).ready(function () {
 
         let jsonArr = []
         $.ajax({
-            url: "https://ist256.up.ist.psu.edu:3004/product",
+            url: "https://ist256.up.ist.psu.edu:3004/product/update",
             //dataType: "json",
             data: JSON.stringify(product),
             contentType: "application/json",
@@ -387,11 +477,13 @@ $(document).ready(function () {
         })
             .done(function (data, status) {
                 console.log("ajax success, status: " + status)
+                appendAlert("Product Updated Successfully. Product JSON: " + JSON.stringify(product), "success");
             })
             .fail(function (xhr, status, errorThrown) {
                 console.log("Status: " + status)
                 console.log("Error: " + errorThrown)
                 console.log("xhr: " + xhr)
+                appendAlert("Product Update Unsuccessful.", "danger");
             })
 
 
