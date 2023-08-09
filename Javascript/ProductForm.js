@@ -140,7 +140,7 @@ $(document).ready(function () {
         var prodJSON = JSON.stringify(product);
         //update/insert handled server side
         updateProduct(product);
-        appendAlert("Product Updated/Added Successfully. Product JSON: " + prodJSON, "success");
+
     });
 
     // Form validation function

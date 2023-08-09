@@ -1,3 +1,79 @@
+//ANGULAR JS
+let shopperApp = angular.module('shopperApp', []);
+shopperApp.controller('shopperController', function ($scope, $controller) {
+    $scope.showJSON = false
+    $scope.displayJSON = function () {
+        $scope.shopperJSON = {
+            email: $scope.email,
+            name: $scope.fName + " " + $scope.lName,
+            age: parseInt($scope.age),
+            address: $scope.address,
+            phone: $scope.phone
+        }
+        console.log('angular')
+        console.log($scope.shopperJSON)
+        for (key in $scope.shopperJSON) {
+            if ($scope.shopperJSON[key]) $scope.showJSON = true
+        };
+    }
+    $scope.getShopper = function () {
+        $.getJSON("https://ist256.up.ist.psu.edu:3004/shopper/read", { email: $scope.email }, function (data, status) {
+            console.log(data)
+            console.log(status)
+            if (status != 'success') throw "Failed"
+            let json = "";
+            for (key in data) {
+                json += `${key} : ${data[key]} \n`
+            }
+            //console.log(data.cart)
+            console.log("Found shopper: \n " + json + "\nStatus: " + status);
+            let names = data.name.split(' ')
+            $scope.email = data.email;
+            $scope.fName = names[0]
+            $scope.lName = names[1]
+            $scope.age = parseInt(data.age)
+            $scope.address = data.address;
+            $scope.phone = data.phone
+            $("#update").prop("disabled", false)
+            $("#delete").prop("disabled", false)
+            $scope.$apply()
+            appendAlert("Shopper Found. Shopper JSON: " + JSON.stringify(data), "success");
+
+        }).fail(function () {
+            console.log("AJAX shopper retrieval failed")
+            appendAlert("Shopper Retrieval Failed", "danger");
+        });
+
+    }
+    $scope.deleteShopper = function () {
+        $.ajax({
+            url: "https://ist256.up.ist.psu.edu:3004/shopper/delete",
+            //dataType: "json",
+            data: { email: $scope.email },
+            type: "GET",
+            crossDomain: true,
+        })
+            .done(function (data) {
+                console.log("Shopper Deleted: " + data)
+                appendAlert("Shopper deleted. Email: " + $scope.email, "success");
+            })
+            .fail(function (xhr, status, errorThrown) {
+                console.log("ajax shopper deletion failed")
+                console.log("Status: " + status)
+                console.log("Error: " + errorThrown)
+                console.log("xhr: " + xhr)
+                appendAlert("Shopper Deletion Failed", "danger");
+
+            })
+    }
+
+})
+function appendAlert(message, type) {
+    $("#alertPlaceholder").html(`<div class="alert alert-${type} alert-dismissible" role="alert">` +
+        `   <div>${message}</div>` +
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+        '</div>')
+}
 $(document).ready(function () {
     let form = $("#userForm");
     console.log("sdf")
@@ -48,18 +124,14 @@ $(document).ready(function () {
         validatePhone();
     })
 
-    function submit(event) {
+    $('#update').on("click", function (event) {
         //validation logic here
         event.preventDefault();
         event.stopPropagation();
-        let err = 0;
-        err += validateEmail();
-        err += validateFirstName();
-        err += validateLastName();
-        err += validateAge();
-        err += validateAddress();
-        err += validatePhone();
-        if (err > 0) return;
+        if (!validateAll()) {
+            appendAlert("Submission not successful, please check fields for mistakes.", "danger")
+            return;
+        }
 
         jsonUser = data();
 
@@ -69,22 +141,40 @@ $(document).ready(function () {
         }
         console.log(json)
         $.ajax({
-            url: "https://ist256.up.ist.psu.edu:3004/userManagement",
+            url: "https://ist256.up.ist.psu.edu:3004/shopper/update",
             data: JSON.stringify(jsonUser),
             //dataType: "json",
             type: "POST",
             contentType: "application/json",
             crossDomain: true,
         })
-            .done(function () { console.log("ajax success") })
+            .done(function () {
+                console.log("ajax success")
+                appendAlert("Success! Updated Shopper!. <br> Json Shopper Object: <br>" + json, "success")
+            })
             .fail(function (xhr, status, errorThrown) {
                 console.log("Status: " + status)
                 console.log("Error: " + errorThrown)
                 console.log("xhr: " + xhr)
+                appendAlert("Shopper Update Unsuccessful.", "danger");
             })
-        appendAlert("Success! <br> Json Shopper Object: <br>" + json, "success")
 
 
+
+
+    });
+    function validateAll() {
+        let valid = true;
+        if (validateEmail() > 0) valid = false;
+        if (validateAge() > 0) valid = false;
+        if (validateFirstName() > 0) valid = false;
+        if (validateLastName() > 0) valid = false;
+        if (validatePhone() > 0) valid = false;
+        if (validateAddress() > 0) valid = false;
+        if (validatePassword > 0) valid = false;
+        if (validateConfirmPassword > 0) valid = false;
+        if (valid) return true;
+        else return false;
 
     }
     //fucntion for email validation
@@ -198,25 +288,88 @@ $(document).ready(function () {
         phoneInput.removeClass("is-invalid");
         phoneInput.addClass("is-valid");
         return 0;
+    }
+    function validatePassword() {
+        const re = /^\S+$/gm
+        let errorMesage = "";
 
+        if (!pw.val()) {
+            errorMesage = "Please enter a password.";
+            addInvalid(pw, errorMesage);
+            return 1;
+        };
+        if (typeof pw.val() != "string") {
+            errorMesage = "Invalid password. Passwords must be a string";
+            addInvalid(pw, errorMesage);
+            return 1;
+        }
+        if (pw.val().length < 5) {
+            errorMesage = "Invalid Password. Password must be at least 5 characters in length.";
+            addInvalid(pw, errorMesage);
+            return 1;
+        }
+        if (!re.test(pw.val())) {
+            errorMesage = "Invalid Password. Password can not contain spaces."
+            addInvalid(pw, errorMesage);
+            return 1;
+        }
 
+        makeValid(pw);
+        return 0;
+    }
+    function validateConfirmPassword() {
+        let errorMesage = "";
+        if (!pwC.val()) {
+            errorMesage = "Please fill out the password confirmation field\n"
+            addInvalid(pwC, errorMesage);
+            return 1;
+        };
+        if (pw.val() != pwC.val()) {
+            errorMesage = "Passwords do not match. Please re-enter your password and ensure they are the same.\n"
+            addInvalid(pwC, errorMesage);
+            return 1;
+        }
+        makeValid(pwC);
+        return 0
     }
     function data() {
-        var data = {
+        return {
             "email": emailInput.val(),
+            "password": pw.val(),
             "name": fNameInput.val() + " " + lNameInput.val(),
             "age": parseInt(ageInput.val()),
             "address": addressInput.val(),
             "phone": phoneInput.val()
         }
-        return data;
-    }
 
-    function appendAlert(message, type) {
-        alertPlaceholder.html(`<div class="alert alert-${type} alert-dismissible" role="alert">` +
-            `   <div>${message}</div>` +
-            '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
-            '</div>')
     }
+    //pass element and error message
+    function addInvalid(element, error) {
+        try {
+            if (element.classList.contains("is-valid")) {
+                element.classList.remove("is-valid")
+            }
+            element.classList.add("is-invalid");
+            element.nextElementSibling.textContent = error;
 
+        } catch (e) {
+            if (element.hasClass("is-valid")) element.removeClass("is-valid");
+            element.addClass("is-invalid");
+            element.next().text(error);
+        }
+
+    }
+    //pass element
+    function makeValid(element) {
+        try {
+            element.classList.remove("is-invalid");
+            element.classList.add("is-valid");
+
+        } catch (error) {
+            element.removeClass("is-invalid");
+            element.addClass("is-valid");
+
+
+        }
+    }
 })

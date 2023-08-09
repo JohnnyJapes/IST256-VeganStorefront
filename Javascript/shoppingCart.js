@@ -100,7 +100,7 @@ $(document).ready(function () {
     getProducts();
     loadProductStorage();
     getCartInfo();
-    $('#checkOut').click(function () {
+    $('#create').click(function () {
         // Handle Checkout
         // This part can be customized according to your needs
         updateJSONtext();
@@ -137,35 +137,22 @@ $(document).ready(function () {
     //     }
     // }
 
-    function getCartInfo() {
-        let id = "guest";
-        let name = "session";
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                id = c.substring(name.length + 1, c.length);
-            }
-        }
-        if (id != "guest") {
+    function getCartInfo(id) {
 
-            $.get("https://ist256.up.ist.psu.edu:3004/cart", { owner: id }, function (data, status) {
-                console.log(data.product)
-                console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
-                for (let i = 0; i < data.length; i++) {
-                    cart.addItem(data[i])
-                }
-            }).fail(function () {
-                console.log("AJAX cart retrieval failed")
-            });
-        }
+
+        $.get("https://ist256.up.ist.psu.edu:3004/cart/read", { cartID: id }, function (data, status) {
+            console.log(data.product)
+            console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+            for (let i = 0; i < data.length; i++) {
+                cart.addItem(data.cart[i])
+            }
+        }).fail(function () {
+            console.log("AJAX cart retrieval failed")
+        });
+
     }
     function getProducts() {
-        $.getJSON("https://ist256.up.ist.psu.edu:3004/product", function (data, status) {
+        $.getJSON("https://ist256.up.ist.psu.edu:3004/product/read10", function (data, status) {
             //alert("Data: " + JSON.stringify(data) + "\nStatus: " + status);
             console.log("start product fetch ajax")
             console.log(data)
@@ -183,26 +170,13 @@ $(document).ready(function () {
     }
 
     function updateCart() {
-        let id = "guest";
-        let name = "session";
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                id = c.substring(name.length + 1, c.length);
-            }
-        }
         var cartProducts = JSON.stringify(cart.items);
         var cartJson = {
             cart: cartProducts,
-            owner: id
+            cartID: 5
         }
         $.ajax({
-            url: "https://ist256.up.ist.psu.edu:3004/cart",
+            url: "https://ist256.up.ist.psu.edu:3004/cart/update",
             data: JSON.stringify(cartJson),
             //dataType: "json",
             type: "POST",
@@ -215,6 +189,15 @@ $(document).ready(function () {
                 console.log("Error: " + errorThrown)
                 console.log("xhr: " + xhr)
             })
+    }
+
+    function deleteCart() {
+        fetch('/cart/delete?cartID=1', {
+            method: 'POST'
+        })
+            .then(res => res.text())
+            .then(data => console.log(data));
+
 
 
     }

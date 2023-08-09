@@ -9,7 +9,6 @@ $(document).ready(function () {
     let phoneInput = $("#phonenum");
     let pw = $("#passInput");
     let pwC = $("#passConfirmInput");
-    let alertPlaceholder = $("#alertPlaceholder");
 
 
     form.on("submit", submit);

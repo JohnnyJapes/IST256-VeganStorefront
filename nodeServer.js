@@ -270,71 +270,71 @@ app.get('/billing', async (req, res) => {
     }
 })
 
-app.get('/cart', async (req, res) => {
-    try {
-        console.log('JSON Payload: ' + req.body);
-        res.header("Access-Control-Allow-Origin", "*");
-        // Connect to the MongoDB server
-        // keeping one connection open for node server duration(look above)
-        //await client.connect();
+// app.get('/cart', async (req, res) => {
+//     try {
+//         console.log('JSON Payload: ' + req.body);
+//         res.header("Access-Control-Allow-Origin", "*");
+//         // Connect to the MongoDB server
+//         // keeping one connection open for node server duration(look above)
+//         //await client.connect();
 
 
-        console.log("Connected to MongoDB");
+//         console.log("Connected to MongoDB");
 
 
-        // Perform operations on the database
-        const database = client.db(dbName);
-        const collection = database.collection("carts");
+//         // Perform operations on the database
+//         const database = client.db(dbName);
+//         const collection = database.collection("carts");
 
 
-        const result = await collection.findOne({ owner: req.query.owner });
-        console.log("Found document:", result._id);
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).send(result)
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-        res.status(500).send('Insertion Error')
+//         const result = await collection.findOne({ owner: req.query.owner });
+//         console.log("Found document:", result._id);
+//         res.setHeader('Content-Type', 'application/json');
+//         res.status(200).send(result)
+//     } catch (error) {
+//         console.error("Error connecting to MongoDB:", error);
+//         res.status(500).send('Insertion Error')
 
 
-    }
-})
+//     }
+// })
 
 
 
 //UPDATE METHODS
 
-app.post('/userManagement', async (req, res) => {
-    try {
-        console.log('JSON Payload: ', req.body);
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        //res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, content-type");
-        // Connect to the MongoDB server
-        //await client.connect();
+// app.post('/userManagement', async (req, res) => {
+//     try {
+//         console.log('JSON Payload: ', req.body);
+//         res.setHeader("Access-Control-Allow-Origin", "*");
+//         //res.setHeader("Access-Control-Allow-Headers", "X-Requested-With, content-type");
+//         // Connect to the MongoDB server
+//         //await client.connect();
 
-        console.log("Connected to MongoDB");
+//         console.log("Connected to MongoDB");
 
-        // Perform operations on the database
-        const database = client.db(dbName);
-        const collection = database.collection("shoppers");
+//         // Perform operations on the database
+//         const database = client.db(dbName);
+//         const collection = database.collection("shoppers");
 
-        const document = {
-            $set: req.body
-        };
+//         const document = {
+//             $set: req.body
+//         };
 
-        // Example: Update a document
-        const filter = { email: document.email }
-        const options = { upsert: true }
-        //update document, otherwise insert new
-        const result = await collection.updateOne(filter, document, options)
-        console.log("Inserted document:", result.insertedId);
-        res.status(200).send("Insertion Successful")
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-        res.status(500).send('Insertion Error')
-        // await client.close();
-    } finally {
-        // Close the connection
-        // await client.close();
-        //console.log("Disconnected from MongoDB");
-    }
-})
+//         // Example: Update a document
+//         const filter = { email: document.email }
+//         const options = { upsert: true }
+//         //update document, otherwise insert new
+//         const result = await collection.updateOne(filter, document, options)
+//         console.log("Inserted document:", result.insertedId);
+//         res.status(200).send("Insertion Successful")
+//     } catch (error) {
+//         console.error("Error connecting to MongoDB:", error);
+//         res.status(500).send('Insertion Error')
+//         // await client.close();
+//     } finally {
+//         // Close the connection
+//         // await client.close();
+//         //console.log("Disconnected from MongoDB");
+//     }
+// })

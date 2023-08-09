@@ -67,6 +67,7 @@
     </nav>
 
     <div id="alertPlaceholder"></div>
+
     <h3 class="mx-4">Add More products:</h3>
     <div class="row mx-4">
         <select class="form-select" aria-label="Default select example" id="productSelect">
@@ -79,6 +80,20 @@
     </div>
     <button class="btn btn-primary my-2 mx-4" id="addItem">Add</button>
     <h3 class="m-4">Shopping Cart</h3>
+    <div class="mb-2 mx-5 row">
+        <label for="cartID" class="form-label">Cart ID:</label>
+        <div class="col-2">
+
+            <input type="number" class="form-control" id="cartID" name="cartID" required>
+            <div class="invalid-feedback">
+                Please enter a valid cartID.
+            </div>
+        </div>
+        <div class="col-2">
+            <button type="button" class="btn btn-primary" id="find">Find
+                Cart</button>
+        </div>
+    </div>
     <div class="row mx-2">
         <div class="container col-12 col-xl-8" id="cart">
             <!-- <div class="cartItem" hidden>
@@ -105,7 +120,9 @@
         </div>
     </div>
     <div class="container-fluid mb-3 mx-3 justify-content-start">
-        <button class="btn btn-success mb-3" id="checkOut">Check Out</button>
+        <button type="button" class="btn btn-success" id="add">Create</button>
+        <button type="button" class="btn btn-primary" id="update" disabled>Update</button>
+        <button type="button" class="btn btn-danger" id="delete" disabled>Delete</button>
     </div>
     <div class="container mb-3 pb-3">
         <p id="JSONtext" class="container mb-3"></p>

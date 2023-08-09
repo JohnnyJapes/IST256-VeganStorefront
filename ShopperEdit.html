@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html ng-app="shopperApp">
 
 <head>
     <meta charset="utf-8">
@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="CSS/ShopperEdit.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.js" crossorigin="anonymous"></script>
+
     <script src="Javascript/shopperEdit.js"></script>
 </head>
 
@@ -63,63 +65,78 @@
     </nav>
 
 
+    <div ng-controller="shopperController">
+        <div class="container mb-5">
+            <div id="alertPlaceholder"></div>
+            <h1>Shopper Management</h1>
 
-    <div class="container mb-5">
-        <div id="alertPlaceholder"></div>
-        <h1>Shopper Management</h1>
-
-        <!-- Bootstrap Form with validation-->
-        <form action="send to location here" id="userForm" class="needs-validation" novalidate>
-            <div class="mb-2">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-                <div class="invalid-feedback">
-                    Please enter a valid email.
-                </div>
-            </div>
-            <div class="mb-2 row">
-                <div class="col-sm-6" id="name">
-                    <label for="fName" class="form-label">First Name:</label>
-                    <input type="text" class="form-control" id="fName" name="fName" required>
-                    <div class="invalid-feedback">
-                        Please enter a valid name.
+            <!-- Bootstrap Form with validation-->
+            <form action="send to location here" id="userForm" class="needs-validation" novalidate>
+                <div class="mb-2 row">
+                    <div class="col-10">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" ng-model='email' required>
+                        <div class="invalid-feedback">
+                            Please enter a valid email.
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-primary" id="find" ng-click="getShopper()">Find
+                            Product</button>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <label for="lName" class="form-label">Last Name:</label>
-                    <input type="text" class="form-control" id="lName" name="lName" required>
-                    <div class="invalid-feedback">
-                        Please enter a valid name.
+                <div class="mb-2 row">
+                    <div class="col-sm-6" id="name">
+                        <label for="fName" class="form-label">First Name:</label>
+                        <input type="text" class="form-control" id="fName" name="fName" ng-model='fName' required>
+                        <div class="invalid-feedback">
+                            Please enter a valid name.
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="lName" class="form-label">Last Name:</label>
+                        <input type="text" class="form-control" id="lName" name="lName" ng-model='lName' required>
+                        <div class="invalid-feedback">
+                            Please enter a valid name.
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="mb-2">
-                <label for="age" class="form-label">Age:</label>
-                <input type="number" class="form-control" id="age" name="age" required>
-                <div class="invalid-feedback">
-                    Please enter a valid age.
+                <div class="mb-2">
+                    <label for="age" class="form-label">Age:</label>
+                    <input type="number" class="form-control" id="age" name="age" ng-model='age' required>
+                    <div class="invalid-feedback">
+                        Please enter a valid age.
+                    </div>
                 </div>
-            </div>
-            <div class="mb-2">
-                <label for="address" class="form-label">Address:</label>
-                <input type="text" class="form-control" id="address" name="address" required>
-                <div class="invalid-feedback">
-                    Please enter a valid address.
+                <div class="mb-2">
+                    <label for="address" class="form-label">Address:</label>
+                    <input type="text" class="form-control" id="address" name="address" ng-model='address' required>
+                    <div class="invalid-feedback">
+                        Please enter a valid address.
+                    </div>
                 </div>
-            </div>
-            <div class="mb-2">
-                <label for="phonenum" class="form-label">Phone Number (Optional):</label>
-                <input type="tel" class="form-control" id="phonenum" name="phonenum">
-                <div class="invalid-feedback">
-                    Please enter a valid phone number.
+                <div class="mb-2">
+                    <label for="phonenum" class="form-label">Phone Number (Optional):</label>
+                    <input type="tel" class="form-control" id="phonenum" name="phonenum" ng-model='phone'>
+                    <div class="invalid-feedback">
+                        Please enter a valid phone number.
+                    </div>
                 </div>
-            </div>
-            <!-- Bootstrap Button -->
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+                <!-- Bootstrap Button -->
+                <button type="button" class="btn btn-primary" id="update" disabled>Update</button>
+                <button type="button" class="btn btn-danger" id="delete" ng-click="deleteShopper()"
+                    disabled>Delete</button>
+            </form>
+        </div>
+
+
+        <div class="mb-2 px-2 py-2" id="shopperJSON" ng-show="showJSON">
+            <h2>Shopper JSON:</h2>
+            <p>{{shopperJSON | json}}</p>
+        </div>
     </div>
 
-
+    </div>
     <footer
         class="position-absolute bottom-0 start-50 translate-middle-x text-bg-light text-center container-fluid mt-3">
         &copy;Vegan Foods 2023

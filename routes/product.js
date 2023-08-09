@@ -32,8 +32,6 @@ router.post('/product/create', async (req, res) => {
         //make sure not duplicate product
         const match = await collection.findOne({ productID: document.productID });
         if (match) {
-            await client.close();
-            console.log("Disconnected from MongoDB");
             throw "Product already in database";
         }
         //insert new
@@ -160,7 +158,7 @@ router.post('/product/update', async (req, res) => {
         console.log(
             `${result.value._id} matched the filter, productID: ${result.value.productID}`,
         );
-        res.status(200).send("Insertion Successful")
+        res.status(200).send("Update Successful")
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
         res.status(500).send('Update Error')
@@ -176,7 +174,6 @@ router.post('/product/update', async (req, res) => {
 //Delete
 router.get('/product/delete', async (req, res) => {
     try {
-        console.log('JSON Payload: ' + req.body);
         res.header("Access-Control-Allow-Origin", "*");
         // Connect to the MongoDB server
         await client.connect();
@@ -192,7 +189,7 @@ router.get('/product/delete', async (req, res) => {
 
         //delete query
         const result = await collection.deleteOne(query)
-        console.log("Deleted document:", result.insertedId);
+        console.log("Deleted document:", result);
         console.log(
             `${result.deletedCount} document(s) matched the filter`
         );
