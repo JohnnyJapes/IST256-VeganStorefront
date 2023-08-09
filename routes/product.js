@@ -76,7 +76,7 @@ router.get('/product/read', async (req, res) => {
             res.status(200).send(result)
         }
         else {
-            res.status(400).send("Product Not Found")
+            res.status(404).send("Product Not Found")
         }
 
     } catch (error) {
