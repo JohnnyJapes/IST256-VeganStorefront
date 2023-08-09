@@ -30,12 +30,11 @@ router.post('/product/create', async (req, res) => {
         // Example: Insert a document
         const document = req.body;
         //make sure not duplicate product
-        const match = await collection.findOne({ owner: document.productID });
-        if (match.insertedId) {
+        const match = await collection.findOne({ productID: document.productID });
+        if (match) {
             await client.close();
             console.log("Disconnected from MongoDB");
             throw "Product already in database";
-            break;
         }
         //insert new
         const result = await collection.insertOne(document);
@@ -72,10 +71,16 @@ router.get('/product/read', async (req, res) => {
 
         //Find document based on query
 
-        const result = await collection.findOne({ owner: req.query.productID });
-        console.log("Found document:", result._id);
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).send(result)
+        const result = await collection.findOne({ productID: parseInt(req.query.productID) });
+        if (result) {
+            console.log("Found document:", result._id);
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).send(result)
+        }
+        else {
+            res.status(400).send("Product Not Found")
+        }
+
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
         res.status(500).send('Find Error')
@@ -142,14 +147,18 @@ router.post('/product/update', async (req, res) => {
         const document = {
             $set: req.body
         };
+        console.log(req.body.productID)
 
-        const filter = { productID: document.productID }
-        const options = { upsert: false }
+        const filter = { productID: req.body.productID }
+        const options = {
+            upsert: false,
+            returnNewDocument: true
+        }
         //update document, otherwise insert new
-        const result = await collection.updateOne(filter, document, options)
-        console.log("Inserted document:", result.insertedId);
+        const result = await collection.findOneAndUpdate(filter, document, options)
+        console.log("Updated document");
         console.log(
-            `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,
+            `${result.value._id} matched the filter, productID: ${result.value.productID}`,
         );
         res.status(200).send("Insertion Successful")
     } catch (error) {
@@ -165,36 +174,38 @@ router.post('/product/update', async (req, res) => {
 })
 
 //Delete
-try {
-    console.log('JSON Payload: ' + req.body);
-    res.header("Access-Control-Allow-Origin", "*");
-    // Connect to the MongoDB server
-    await client.connect();
-    console.log("Connected to MongoDB");
+router.get('/product/delete', async (req, res) => {
+    try {
+        console.log('JSON Payload: ' + req.body);
+        res.header("Access-Control-Allow-Origin", "*");
+        // Connect to the MongoDB server
+        await client.connect();
+        console.log("Connected to MongoDB");
 
-    // Perform operations on the database
-    const database = client.db(dbName);
-    const collection = database.collection("products");
-
-
-    // write query to variable
-    const query = { productID: req.query.productID }
-
-    //delete query
-    const result = await collection.deleteOne(query)
-    console.log("Inserted document:", result.insertedId);
-    console.log(
-        `${result.matchedCount} document(s) matched the filter, deleted ${result.modifiedCount} document(s)`,
-    );
-    res.status(200).send("Deletion Successful")
-} catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-    res.status(500).send('Update Error')
+        // Perform operations on the database
+        const database = client.db(dbName);
+        const collection = database.collection("products");
 
 
-} finally {
-    // Close the connection
-    await client.close();
-    console.log("Disconnected from MongoDB");
-}
+        // write query to variable
+        const query = { productID: req.query.productID }
+
+        //delete query
+        const result = await collection.deleteOne(query)
+        console.log("Deleted document:", result.insertedId);
+        console.log(
+            `${result.deletedCount} document(s) matched the filter`
+        );
+        res.status(200).send("Deletion Successful")
+    } catch (error) {
+        console.error("Error connecting to MongoDB:", error);
+        res.status(500).send('Update Error')
+
+
+    } finally {
+        // Close the connection
+        await client.close();
+        console.log("Disconnected from MongoDB");
+    }
+})
 module.exports = router;
