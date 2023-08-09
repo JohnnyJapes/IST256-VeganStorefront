@@ -55,6 +55,13 @@ class Cart {
         return total;
     }
 
+    clearCart() {
+        for (i = 0; i < this.items.length; i++) {
+            this.removeItem(i)
+        }
+        this.updateCart();
+    }
+
     updateCart() {
         $('#cart').empty();
         console.log("Update cart")
@@ -99,7 +106,10 @@ $(document).ready(function () {
     cart.updateCart();
     getProducts();
     loadProductStorage();
-    getCartInfo();
+    $('#find').click(function () {
+        if ($('#cartID').val())
+            getCartInfo(parseInt($('#cartID').val()))
+    })
     $('#create').click(function () {
         // Handle Checkout
         // This part can be customized according to your needs
@@ -136,18 +146,47 @@ $(document).ready(function () {
     //         }
     //     }
     // }
+    function createCart() {
+        var cartProducts = JSON.stringify(cart.items);
+        var cartJson = {
+            cart: cartProducts,
+            cartID: parseInt($('#cartID').val())
+        }
+        $.ajax({
+            url: "https://ist256.up.ist.psu.edu:3004/cart",
+            data: JSON.stringify(cartJson),
+            //dataType: "json",
+            type: "POST",
+            contentType: "application/json",
+            crossDomain: true,
+        })
+            .done(function () {
+                console.log("ajax success")
+                appendAlert("Cart Created Successfully. Cart JSON: " + JSON.stringify(cartJson), "success");
+            })
+            .fail(function (xhr, status, errorThrown) {
+                console.log("Status: " + status)
+                console.log("Error: " + errorThrown)
+                console.log("xhr: " + xhr)
+                appendAlert("Cart Creation Unsuccessful.", "danger");
+            })
+    }
 
     function getCartInfo(id) {
-
-
         $.get("https://ist256.up.ist.psu.edu:3004/cart/read", { cartID: id }, function (data, status) {
-            console.log(data.product)
+            console.log(data.cart)
             console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+            cart.clearCart();
             for (let i = 0; i < data.length; i++) {
                 cart.addItem(data.cart[i])
             }
+            appendAlert("Cart Found. Cart JSON: " + JSON.stringify(data), "success");
+            $("#add").prop("disabled", true);
+            $("#update").prop("disabled", false)
+            $("#delete").prop("disabled", false)
         }).fail(function () {
             console.log("AJAX cart retrieval failed")
+            appendAlert("Cart Retrieval Failed", "danger");
         });
 
     }
@@ -173,7 +212,7 @@ $(document).ready(function () {
         var cartProducts = JSON.stringify(cart.items);
         var cartJson = {
             cart: cartProducts,
-            cartID: 5
+            cartID: parseInt($('#cartID').val())
         }
         $.ajax({
             url: "https://ist256.up.ist.psu.edu:3004/cart/update",
@@ -183,21 +222,44 @@ $(document).ready(function () {
             contentType: "application/json",
             crossDomain: true,
         })
-            .done(function () { console.log("ajax success") })
+            .done(function () {
+                console.log("ajax success")
+                appendAlert("Success! Updated Cart! <br> Json Cart Object: <br>" + JSON.stringify(cartJson), "success")
+            })
             .fail(function (xhr, status, errorThrown) {
                 console.log("Status: " + status)
                 console.log("Error: " + errorThrown)
                 console.log("xhr: " + xhr)
+                appendAlert("Cart Update Unsuccessful.", "danger");
             })
     }
 
     function deleteCart() {
-        fetch('/cart/delete?cartID=1', {
-            method: 'POST'
-        })
-            .then(res => res.text())
-            .then(data => console.log(data));
-
+        const controller = new AbortController()
+        try {
+            fetch('/cart/delete?cartID=' + $('#cartID').val(), {
+                method: 'GET'
+            })
+                .then(res => {
+                    if (res.ok == true)
+                        res.text()
+                    else {
+                        console.log("Ajax Error, response not OK")
+                        appendAlert("Cart Deletion Failed", "danger");
+                        break
+                    }
+                })
+                .then(data => {
+                    console.log(data)
+                    appendAlert("Cart deleted. Email: " + $scope.email, "success");
+                    $("#add").prop("disabled", false);
+                    $("#update").prop("disabled", true)
+                    $("#delete").prop("disabled", true)
+                });
+        }
+        catch {
+            console.log("Ajax Error")
+        }
 
 
     }
@@ -212,7 +274,7 @@ $(document).ready(function () {
     }
 
     function appendAlert(message, type) {
-        alertPlaceholder.html(`<div class="alert alert-${type} alert-dismissible" role="alert">` +
+        $('alertPlaceholder').html(`<div class="alert alert-${type} alert-dismissible" role="alert">` +
             `   <div>${message}</div>` +
             '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
             '</div>')
