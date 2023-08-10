@@ -171,8 +171,6 @@ $(document).ready(function () {
         if (validateLastName() > 0) valid = false;
         if (validatePhone() > 0) valid = false;
         if (validateAddress() > 0) valid = false;
-        if (validatePassword > 0) valid = false;
-        if (validateConfirmPassword > 0) valid = false;
         if (valid) return true;
         else return false;
 
@@ -289,53 +287,9 @@ $(document).ready(function () {
         phoneInput.addClass("is-valid");
         return 0;
     }
-    function validatePassword() {
-        const re = /^\S+$/gm
-        let errorMesage = "";
-
-        if (!pw.val()) {
-            errorMesage = "Please enter a password.";
-            addInvalid(pw, errorMesage);
-            return 1;
-        };
-        if (typeof pw.val() != "string") {
-            errorMesage = "Invalid password. Passwords must be a string";
-            addInvalid(pw, errorMesage);
-            return 1;
-        }
-        if (pw.val().length < 5) {
-            errorMesage = "Invalid Password. Password must be at least 5 characters in length.";
-            addInvalid(pw, errorMesage);
-            return 1;
-        }
-        if (!re.test(pw.val())) {
-            errorMesage = "Invalid Password. Password can not contain spaces."
-            addInvalid(pw, errorMesage);
-            return 1;
-        }
-
-        makeValid(pw);
-        return 0;
-    }
-    function validateConfirmPassword() {
-        let errorMesage = "";
-        if (!pwC.val()) {
-            errorMesage = "Please fill out the password confirmation field\n"
-            addInvalid(pwC, errorMesage);
-            return 1;
-        };
-        if (pw.val() != pwC.val()) {
-            errorMesage = "Passwords do not match. Please re-enter your password and ensure they are the same.\n"
-            addInvalid(pwC, errorMesage);
-            return 1;
-        }
-        makeValid(pwC);
-        return 0
-    }
     function data() {
         return {
             "email": emailInput.val(),
-            "password": pw.val(),
             "name": fNameInput.val() + " " + lNameInput.val(),
             "age": parseInt(ageInput.val()),
             "address": addressInput.val(),
