@@ -83,14 +83,22 @@
             <h1>Returns</h1>
             <!-- Bootstrap Form with validation-->
             <form action="send to location here" id="returnsForm" class="needs-validation" novalidate>
-                <div class="mb-2">
+                <div class="mb-2 row">
                     <label for="orderNum" class="form-label">Order Number:</label>
-                    <input type="number" class="form-control" id="orderNum" name="orderNum" ng-model='orderNum'
-                        required>
-                    <div class="invalid-feedback">
-                        Please enter a valid order number.
+                    <div class="col-10">
+
+                        <input type="number" class="form-control" id="orderNum" name="orderNum" ng-model='orderNum'
+                            required>
+                        <div class="invalid-feedback">
+                            Please enter a valid order number.
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-primary" id="find" ng-click="getShopper()">Find
+                            Return</button>
                     </div>
                 </div>
+
                 <div class="mb-2">
                     <label for="reason" class="form-label">Reason:</label>
                     <textarea class="form-control" id="description" rows="3" required ng-model='description'
@@ -99,6 +107,9 @@
                 </div>
                 <!-- Bootstrap Button -->
                 <button type="submit" class="btn btn-primary" id="add" ng-click="displayJSON()">Submit</button>
+                <button type="button" class="btn btn-primary" id="update" disabled>Update</button>
+                <button type="button" class="btn btn-danger" id="delete" ng-click="deleteReturn()"
+                    disabled>Delete</button>
             </form>
         </div>
         <div class="mb-2 py-2" id="returnsJSON" ng-show="showJSON">

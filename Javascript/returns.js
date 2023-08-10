@@ -1,4 +1,3 @@
-
 //ANGULAR JS
 let returnsApp = angular.module('returnsApp', []);
 returnsApp.controller('returnsController', function ($scope, $controller) {
@@ -6,7 +5,7 @@ returnsApp.controller('returnsController', function ($scope, $controller) {
     $scope.displayJSON = function () {
         $scope.returnsJSON = {
             order: $scope.orderNum,
-            descriptionription: $scope.description
+            description: $scope.description
         }
         console.log('angular')
         console.log($scope.returnsJSON)
@@ -14,6 +13,62 @@ returnsApp.controller('returnsController', function ($scope, $controller) {
             if ($scope.returnsJSON[key]) $scope.showJSON = true
         };
 
+    }
+    $scope.getReturn = function () {
+        $.getJSON("https://ist256.up.ist.psu.edu:3004/returns/read", { orderNum: $scope.orderNum }, function (data, status) {
+            console.log(data)
+            let json = "";
+            for (key in data) {
+                json += `${key} : ${data[key]} \n`
+            }
+            //console.log(data.returns)
+            console.log("Found return: \n " + json + "\nStatus: " + status);
+            $scope.orderNum = data.orderNum;
+            $scope.description = data.description;
+            $("#add").prop("disabled", true);
+            $("#update").prop("disabled", false)
+            $("#delete").prop("disabled", false)
+            $scope.apply()
+
+
+        }).fail(function () {
+            console.log("AJAX product retrieval failed")
+        });
+
+
+    }
+
+
+    $scope.updateReturn = function () {
+        var query = "https://ist256.up.ist.psu.edu:3004/returns/update";
+        query += "orderNum" + $scope.orderNum;
+        query += "description" + $scope.description;
+        $scope.request = query;
+        $scope.$apply();
+        $.ajax({ url: query, crossDomain: true, dataType: 'json', type: 'GET' })
+            .done(function (json) {
+                $scope.response = json.result;
+                $scope.$apply();
+            })
+            .fail(function () {
+                alert("Error");
+            })
+    }
+
+    $scope.deleteReturn = function () {
+        //needs update button for this, will work on later
+        var query = "https://ist256.up.ist.psu.edu:3004/returns/delete";
+        query += "orderNum" + $scope.orderNum;
+        query += "description" + $scope.description;
+        $scope.request = query;
+        $.ajax({ url: query, crossDomain: true, dataType: 'json', type: 'GET' })
+            .done(function (json) {
+                $scope.response = json.result;
+                $scope.$apply();
+            })
+            .fail(function () {
+                alert("Error");
+            })
     }
 })
 
@@ -26,6 +81,7 @@ $(document).ready(function () {
     form.on("submit", submit);
     order.on("input", validateOrderNumber);
     order.on("focusout", validateOrderNumber);
+    order.on("focusout", getReturn);
     description.on("input", validateDescription);
     description.on("focusout", validateDescription);
 
@@ -38,7 +94,37 @@ $(document).ready(function () {
             appendAlert("Some fields are invalid.", "danger");
             return
         }
-        updateReturns();
+        createReturns();
+
+    }
+
+    $('#update').on("click", function (event) {
+        // Prevent default form submission
+        console.log('submit event')
+        event.preventDefault();
+
+
+        // Perform form validation
+        if (!formValidation()) {
+            return;
+        }
+        var product = productJson();
+        var prodJSON = JSON.stringify(product);
+        //update/insert handled server side
+        updateProduct(product);
+        appendAlert("Product Updated/Added Successfully. Product JSON: " + prodJSON, "success");
+    });
+
+
+    function update() {
+        event.preventDefault();
+        event.stopPropagation();
+        console.log("update")
+        if (!formValidation()) {
+            appendAlert("Some fields are invalid.", "danger");
+            return
+        }
+        updateReturn();
 
     }
     // Form validation function
@@ -119,13 +205,14 @@ $(document).ready(function () {
     }
     function returnsJson() {
         let returns = {
-            orderNumber: order.val(),
+            orderNumber: orderNumber.val(),
             descriptionription: description.val()
 
         }
         return returns;
     }
-    function updateReturns() {
+
+    function createReturns() {
         $.ajax({
             url: "https://ist256.up.ist.psu.edu:3004/returns",
             data: JSON.stringify(returnsJson()),
@@ -146,4 +233,3 @@ $(document).ready(function () {
             })
     }
 })
-
