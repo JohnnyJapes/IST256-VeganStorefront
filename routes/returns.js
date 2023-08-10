@@ -111,7 +111,7 @@ router.post('/returns/update', async (req, res) => {
         };
 
 
-        const filter = { orderNumber: document.orderNumber }
+        const filter = { orderNumber: req.body.orderNumber }
         const options = { upsert: false }
         //update document, otherwise insert new
         const result = await collection.updateOne(filter, document, options)
