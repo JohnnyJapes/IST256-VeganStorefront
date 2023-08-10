@@ -110,15 +110,29 @@ $(document).ready(function () {
         if ($('#cartID').val())
             getCartInfo(parseInt($('#cartID').val()))
     })
-    $('#create').click(function () {
+    $('#add').click(function () {
+        // Handle Checkout
+        // This part can be customized according to your needs
+        updateJSONtext();
+        //getUserInfo();
+        createCart();
+        //sendUser();
+        //alert('Checking out. Thank you for your purchase!');
+        //appendAlert("Proceeding to next step of checkout.", "success")
+    });
+    $('#update').click(function () {
         // Handle Checkout
         // This part can be customized according to your needs
         updateJSONtext();
         //getUserInfo();
         updateCart();
-        //sendUser();
-        //alert('Checking out. Thank you for your purchase!');
-        appendAlert("Proceeding to next step of checkout.", "success")
+    });
+    $('#delete').click(function () {
+        // Handle Checkout
+        // This part can be customized according to your needs
+        updateJSONtext();
+        //getUserInfo();
+        deleteCart();
     });
 
     $('#addItem').click(function () {
@@ -246,7 +260,7 @@ $(document).ready(function () {
                     else {
                         console.log("Ajax Error, response not OK")
                         appendAlert("Cart Deletion Failed", "danger");
-                        break
+                        throw " response not OK"
                     }
                 })
                 .then(data => {
@@ -257,8 +271,8 @@ $(document).ready(function () {
                     $("#delete").prop("disabled", true)
                 });
         }
-        catch {
-            console.log("Ajax Error")
+        catch (error) {
+            console.log("Ajax Error: " + error)
         }
 
 

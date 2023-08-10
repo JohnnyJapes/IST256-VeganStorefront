@@ -77,13 +77,17 @@ $(document).ready(function () {
             contentType: "application/json",
             crossDomain: true,
         })
-            .done(function () { console.log("ajax success") })
+            .done(function () {
+                console.log("ajax success")
+                appendAlert("Success! <br> Json Shopper Object: <br>" + json, "success")
+            })
             .fail(function (xhr, status, errorThrown) {
                 console.log("Status: " + status)
                 console.log("Error: " + errorThrown)
                 console.log("xhr: " + xhr)
+                appendAlert("Shopper Creation Unsuccessful.", "danger");
             })
-        appendAlert("Success! <br> Json Shopper Object: <br>" + json, "success")
+
 
 
 

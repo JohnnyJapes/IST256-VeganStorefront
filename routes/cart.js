@@ -12,11 +12,15 @@ router.post('/cart', async (req, res) => {
         console.log("cart create")
         res.header("Access-Control-Allow-Origin", "*");
         const cartDocument = req.body;
+        console.log(req.body.cartID)
         await client.connect();
         const database = client.db(dbName);
         const collection = database.collection("carts");
         const match = await collection.findOne({ cartID: cartDocument.cartID });
-        if (match) throw "Cart ID already in database";
+        if (match) {
+            console.log(match)
+            throw "Cart ID already in database"
+        };
         const result = await collection.insertOne(cartDocument);
         console.log("Inserted document:", result.insertedId);
         res.status(200).send("Insertion Successful");
