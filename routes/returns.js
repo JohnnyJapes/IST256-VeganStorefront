@@ -48,6 +48,143 @@ router.post('/returns', async (req, res) => {
         console.log("Disconnected from MongoDB");
     }
 })
+//Read
+router.get('/returns/read', async (req, res) => {
+    try {
+        //console.log('JSON Payload: ' + req.body);
+        res.header("Access-Control-Allow-Origin", "*");
+        // Connect to the MongoDB server
+        await client.connect();
+        console.log("Connected to MongoDB");
+
+
+
+
+        console.log("Get return");
+
+
+
+
+        // Perform operations on the database
+        const database = client.db(dbName);
+        const collection = database.collection("returns");
+
+
+
+
+        //Find document based on query
+
+
+        const result = await collection.findOne({ owner: req.query.productID });
+        console.log("Found document:", result._id);
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).send(result)
+    } catch (error) {
+        console.error("Error connecting to MongoDB:", error);
+        res.status(500).send('Find Error')
+
+
+
+
+    } finally {
+        // Close the connection
+        await client.close();
+        console.log("Disconnected from MongoDB");
+    }
+})
+
+
+
+//Update
+router.post('/returns/update', async (req, res) => {
+    try {
+        console.log('JSON Payload: ' + req.body);
+        res.header("Access-Control-Allow-Origin", "*");
+        // Connect to the MongoDB server
+        await client.connect();
+        console.log("Connected to MongoDB");
+
+
+        // Perform operations on the database
+        const database = client.db(dbName);
+        const collection = database.collection("returns");
+
+
+
+
+        // Example: Insert a document
+        const document = {
+            $set: req.body
+        };
+
+
+        const filter = { orderNum: document.orderNum }
+        const options = { upsert: false }
+        //update document, otherwise insert new
+        const result = await collection.updateOne(filter, document, options)
+        console.log("Inserted document:", result.insertedId);
+        console.log(
+            `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,
+        );
+        res.status(200).send("Insertion Successful")
+    } catch (error) {
+        console.error("Error connecting to MongoDB:", error);
+        res.status(500).send('Update Error')
+
+
+
+
+    } finally {
+        // Close the connection
+        await client.close();
+        console.log("Disconnected from MongoDB");
+    }
+})
+
+
+//Delete
+router.get('/cart/delete', async (req, res) => {
+    try {
+        console.log('JSON Payload: ' + req.body);
+        res.header("Access-Control-Allow-Origin", "*");
+        // Connect to the MongoDB server
+        await client.connect();
+        console.log("Connected to MongoDB");
+
+
+        // Perform operations on the database
+        const database = client.db(dbName);
+        const collection = database.collection("returns");
+
+
+
+
+        // write query to variable
+        const query = { orderNum: req.query.orderNum }
+
+
+        //delete query
+        const result = await collection.deleteOne(query)
+        console.log("Inserted document:", result.insertedId);
+        console.log(
+            `${result.matchedCount} document(s) matched the filter, deleted ${result.modifiedCount} document(s)`,
+        );
+        res.status(200).send("Deletion Successful")
+    } catch (error) {
+        console.error("Error connecting to MongoDB:", error);
+        res.status(500).send('Update Error')
+
+
+
+
+    } finally {
+        // Close the connection
+        await client.close();
+        console.log("Disconnected from MongoDB");
+    }
+})
+module.exports = router;
+
 
 
 module.exports = router;

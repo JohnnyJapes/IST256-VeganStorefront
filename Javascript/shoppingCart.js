@@ -27,8 +27,8 @@ class Cart {
 
     removeItem(index) {
         this.items.splice(index, 1);
-        var jsd = JSON.stringify(this.items);
-        localStorage.setItem("cart", jsd)
+        //var jsd = JSON.stringify(this.items);
+        //localStorage.setItem("cart", jsd)
         this.updateCart();
     }
 
@@ -56,8 +56,8 @@ class Cart {
     }
 
     clearCart() {
-        for (i = 0; i < this.items.length; i++) {
-            this.removeItem(i)
+        for (let i = 0; i < this.items.length; i++) {
+            this.items.pop()
         }
         this.updateCart();
     }
@@ -166,6 +166,8 @@ $(document).ready(function () {
             cart: cartProducts,
             cartID: parseInt($('#cartID').val())
         }
+        console.log("parse: " + parseInt($('#cartID').val()))
+        console.log(cartJson.cartID)
         $.ajax({
             url: "https://ist256.up.ist.psu.edu:3004/cart",
             data: JSON.stringify(cartJson),
@@ -190,9 +192,11 @@ $(document).ready(function () {
         $.get("https://ist256.up.ist.psu.edu:3004/cart/read", { cartID: id }, function (data, status) {
             console.log(data.cart)
             console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
+            console.log(JSON.parse(data.cart))
+            let cartData = JSON.parse(data.cart)
             cart.clearCart();
-            for (let i = 0; i < data.length; i++) {
-                cart.addItem(data.cart[i])
+            for (let i = 0; i < cartData.length; i++) {
+                cart.addItem(cartData[i])
             }
             appendAlert("Cart Found. Cart JSON: " + JSON.stringify(data), "success");
             $("#add").prop("disabled", true);
@@ -249,31 +253,51 @@ $(document).ready(function () {
     }
 
     function deleteCart() {
-        const controller = new AbortController()
-        try {
-            fetch('/cart/delete?cartID=' + $('#cartID').val(), {
-                method: 'GET'
+        $.ajax({
+            url: "https://ist256.up.ist.psu.edu:3004/cart/delete",
+            //dataType: "json",
+            data: { cartID: $('#cartID').val() },
+            type: "GET",
+            crossDomain: true,
+        })
+            .done(function (data) {
+                console.log("Cart Deleted: " + data)
+                appendAlert("Cart deleted. ProductID: " + $('#cartID').val(), "success");
             })
-                .then(res => {
-                    if (res.ok == true)
-                        res.text()
-                    else {
-                        console.log("Ajax Error, response not OK")
-                        appendAlert("Cart Deletion Failed", "danger");
-                        throw " response not OK"
-                    }
-                })
-                .then(data => {
-                    console.log(data)
-                    appendAlert("Cart deleted. Email: " + $scope.email, "success");
-                    $("#add").prop("disabled", false);
-                    $("#update").prop("disabled", true)
-                    $("#delete").prop("disabled", true)
-                });
-        }
-        catch (error) {
-            console.log("Ajax Error: " + error)
-        }
+            .fail(function (xhr, status, errorThrown) {
+                console.log("ajax product deletion failed")
+                console.log("Status: " + status)
+                console.log("Error: " + errorThrown)
+                console.log("xhr: " + xhr)
+                appendAlert("Cart Deletion Failed", "danger");
+
+            })
+        // const controller = new AbortController()
+        // try {
+
+        //     fetch('/cart/delete?cartID=' + $('#cartID').val(), {
+        //         method: 'GET'
+        //     })
+        //         .then(res => {
+        //             if (res.ok == true)
+        //                 res.text()
+        //             else {
+        //                 console.log("Ajax Error, response not OK")
+        //                 appendAlert("Cart Deletion Failed", "danger");
+        //                 throw " response not OK"
+        //             }
+        //         })
+        //         .then(data => {
+        //             console.log(data)
+        //             appendAlert("Cart deleted. Email: " + $scope.email, "success");
+        //             $("#add").prop("disabled", false);
+        //             $("#update").prop("disabled", true)
+        //             $("#delete").prop("disabled", true)
+        //         });
+        // }
+        // catch (error) {
+        //     console.log("Ajax Error: " + error)
+        // }
 
 
     }
@@ -288,7 +312,7 @@ $(document).ready(function () {
     }
 
     function appendAlert(message, type) {
-        $('alertPlaceholder').html(`<div class="alert alert-${type} alert-dismissible" role="alert">` +
+        $('#alertPlaceholder').html(`<div class="alert alert-${type} alert-dismissible" role="alert">` +
             `   <div>${message}</div>` +
             '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
             '</div>')

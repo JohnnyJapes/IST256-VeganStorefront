@@ -74,9 +74,14 @@ router.get('/shopper/read', async (req, res) => {
 
 
         const result = await collection.findOne({ email: req.query.email });
-        console.log("Found document:", result._id);
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).send(result)
+        if (result) {
+            console.log("Found document:", result._id);
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).send(result)
+        }
+        else {
+            res.status(404).send("Shopper Not Found")
+        }
     } catch (error) {
         console.error("Error During Find process: ", error);
         res.status(500).send('Find Error')
@@ -124,9 +129,6 @@ router.post('/shopper/update', async (req, res) => {
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
         res.status(500).send('Update Error')
-
-
-
 
     } finally {
         // Close the connection
