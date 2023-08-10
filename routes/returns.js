@@ -32,7 +32,10 @@ router.post('/returns', async (req, res) => {
 
         // Example: Insert a document
         const document = req.body;
-
+        const match = await collection.findOne({ orderNumber: document.orderNumber });
+        if (match) {
+            throw "Return already in database";
+        }
 
         const result = await collection.insertOne(document);
         console.log("Inserted document:", result.insertedId);
@@ -57,25 +60,15 @@ router.get('/returns/read', async (req, res) => {
         await client.connect();
         console.log("Connected to MongoDB");
 
-
-
-
         console.log("Get return");
-
-
-
 
         // Perform operations on the database
         const database = client.db(dbName);
         const collection = database.collection("returns");
 
-
-
-
         //Find document based on query
 
-
-        const result = await collection.findOne({ owner: req.query.productID });
+        const result = await collection.findOne({ orderNumber: parseInt(req.query.orderNumber) });
         console.log("Found document:", result._id);
         res.setHeader('Content-Type', 'application/json');
         res.status(200).send(result)
@@ -118,7 +111,7 @@ router.post('/returns/update', async (req, res) => {
         };
 
 
-        const filter = { orderNum: document.orderNum }
+        const filter = { orderNumber: document.orderNumber }
         const options = { upsert: false }
         //update document, otherwise insert new
         const result = await collection.updateOne(filter, document, options)
@@ -160,7 +153,7 @@ router.get('/cart/delete', async (req, res) => {
 
 
         // write query to variable
-        const query = { orderNum: req.query.orderNum }
+        const query = { orderNumber: parseInt(req.query.orderNumber) }
 
 
         //delete query
