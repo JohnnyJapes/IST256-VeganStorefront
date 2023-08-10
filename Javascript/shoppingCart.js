@@ -56,7 +56,7 @@ class Cart {
     }
 
     clearCart() {
-        for (let i = 0; i < this.items.length; i++) {
+        while (this.items.length > 0) {
             this.items.pop()
         }
         this.updateCart();
