@@ -97,13 +97,9 @@ router.post('/returns/update', async (req, res) => {
         await client.connect();
         console.log("Connected to MongoDB");
 
-
         // Perform operations on the database
         const database = client.db(dbName);
         const collection = database.collection("returns");
-
-
-
 
         // Example: Insert a document
         const document = {
@@ -111,7 +107,7 @@ router.post('/returns/update', async (req, res) => {
         };
 
 
-        const filter = { orderNumber: req.body.orderNumber }
+        const filter = { orderNumber: parseInt(req.body.orderNumber) }
         const options = { upsert: false }
         //update document, otherwise insert new
         const result = await collection.updateOne(filter, document, options)
@@ -148,13 +144,8 @@ router.get('/cart/delete', async (req, res) => {
         // Perform operations on the database
         const database = client.db(dbName);
         const collection = database.collection("returns");
-
-
-
-
         // write query to variable
         const query = { orderNumber: parseInt(req.query.orderNumber) }
-
 
         //delete query
         const result = await collection.deleteOne(query)

@@ -73,6 +73,13 @@ returnsApp.controller('returnsController', function ($scope, $controller) {
             })
     }
 })
+function appendAlert(message, type) {
+    let alertPlaceholder = $("#alertPlaceholder");
+    alertPlaceholder.html(`<div class="alert alert-${type} alert-dismissible" role="alert">` +
+        `   <div>${message}</div>` +
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+        '</div>')
+}
 
 $(document).ready(function () {
     let form = $("#returnsForm");
@@ -211,7 +218,7 @@ $(document).ready(function () {
         })
             .done(function () {
                 console.log("ajax success")
-                appendAlert("Successfully Submitted", "success");
+                appendAlert("Successfully created", "success");
             })
             .fail(function (xhr, status, errorThrown) {
                 console.log("Status: " + status)
@@ -231,7 +238,7 @@ $(document).ready(function () {
         })
             .done(function () {
                 console.log("ajax success")
-                appendAlert("Successfully Submitted", "success");
+                appendAlert("Successfully Updated", "success");
             })
             .fail(function (xhr, status, errorThrown) {
                 console.log("Status: " + status)
