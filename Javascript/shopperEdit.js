@@ -86,7 +86,7 @@ $(document).ready(function () {
     let alertPlaceholder = $("#alertPlaceholder");
 
 
-    form.on("submit", submit);
+    //form.on("submit", submit);
     emailInput.on("focusout", (event) => {
         validateEmail();
     })
