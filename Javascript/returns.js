@@ -38,23 +38,6 @@ returnsApp.controller('returnsController', function ($scope, $controller) {
 
     }
 
-
-    // $scope.updateReturn = function () {
-    //     var query = "https://ist256.up.ist.psu.edu:3004/returns/update";
-    //     query += "orderNum" + $scope.orderNum;
-    //     query += "description" + $scope.description;
-    //     $scope.request = query;
-    //     $scope.$apply();
-    //     $.ajax({ url: query, crossDomain: true, dataType: 'json', type: 'GET' })
-    //         .done(function (json) {
-    //             $scope.response = json.result;
-    //             $scope.$apply();
-    //         })
-    //         .fail(function () {
-    //             alert("Error");
-    //         })
-    // }
-
     $scope.deleteReturn = function () {
         //needs update button for this, will work on later
         var query = "https://ist256.up.ist.psu.edu:3004/returns/delete";

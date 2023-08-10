@@ -315,29 +315,7 @@ $(document).ready(function () {
     }
 
     function productJson() {
-        //map select inputs
-        // let category;
-        // let unit;
-        // switch (parseInt($("#category").val())) {
-        //     case 1: category = "Vegetables";
-        //         break;
-        //     case 2: category = "Meat Alternative";
-        //         break;
-        //     case 3: category = "Merchandise";
-        //         break;
-        // }
-        // switch (parseInt($("#unit").val())) {
-        //     case 1: unit = "Grams";
-        //         break;
-        //     case 2: unit = "Kilograms";
-        //         break;
-        //     case 3: unit = "Ounces";
-        //         break;
-        //     case 4: unit = "Pounds";
-        //         break;
-        //     case 5: unit = "Liters";
-        //         break;
-        // }
+
         let weight;
         console.log($('#weight').val())
         if (!$('#weight').val()) weight = 0;

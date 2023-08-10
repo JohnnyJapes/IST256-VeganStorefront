@@ -114,11 +114,9 @@ $(document).ready(function () {
         // Handle Checkout
         // This part can be customized according to your needs
         updateJSONtext();
-        //getUserInfo();
+
         createCart();
-        //sendUser();
-        //alert('Checking out. Thank you for your purchase!');
-        //appendAlert("Proceeding to next step of checkout.", "success")
+
     });
     $('#update').click(function () {
         // Handle Checkout

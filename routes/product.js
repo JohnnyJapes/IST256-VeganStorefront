@@ -185,7 +185,7 @@ router.get('/product/delete', async (req, res) => {
 
 
         // write query to variable
-        const query = { productID: req.query.productID }
+        const query = { productID: parseInt(req.query.productID) }
 
         //delete query
         const result = await collection.deleteOne(query)
@@ -193,6 +193,8 @@ router.get('/product/delete', async (req, res) => {
         console.log(
             `${result.deletedCount} document(s) matched the filter`
         );
+        if (result.deletedCount < 1)
+            throw "No Product Found"
         res.status(200).send("Deletion Successful")
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
